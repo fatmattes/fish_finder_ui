@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FishFinder - Recommendations</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .app-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .back-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .back-button:active {
+        transform: scale(0.9);
+      }
+
+      .header-title h2 {
+        font-size: 20px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .app-content {
+        height: calc(100% - 120px);
+        overflow-y: auto;
+        padding: 20px;
+        padding-bottom: 80px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+        margin: 20px 0 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .recommendation-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .recommendation-card:active {
+        transform: scale(0.98);
+        border-color: #1a237e;
+      }
+
+      .spot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .spot-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+      }
+
+      .success-rate {
+        background: #4caf50;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .spot-details {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+      }
+
+      .spot-stats {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        font-size: 13px;
+      }
+
+      .spot-fish {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+
+      .fish-tag {
+        background: #e3f2fd;
+        color: #1a237e;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .recommend-button {
+        background: #1a237e;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      /* YENİ EKLENEN LOCAL FISH SPECIES STİLLERİ */
+      .local-fish-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .local-fish-card:active {
+        transform: scale(0.98);
+        border-color: #1a237e;
+        background: #f5f7ff;
+      }
+
+      .fish-icon-container {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .fish-icon {
+        font-size: 28px;
+        color: white;
+      }
+
+      .fish-info {
+        flex: 1;
+      }
+
+      .fish-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 5px;
+      }
+
+      .fish-description {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .fish-arrow {
+        color: #1a237e;
+        font-size: 18px;
+        opacity: 0.7;
+      }
+
+      /* FISH SPECIES DETAIL PAGE STYLES */
+      .fish-detail-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        text-align: center;
+      }
+
+      .fish-detail-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+      }
+
+      .fish-detail-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .fish-detail-subtitle {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .fish-species-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+      }
+
+      .species-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .species-card:active {
+        transform: scale(0.97);
+        border-color: #2196f3;
+      }
+
+      .species-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+        color: #2196f3;
+      }
+
+      .species-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 5px;
+      }
+
+      .species-season {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .species-detail {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+      }
+
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .detail-value {
+        color: #1a237e;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 5px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .recommendation-card {
+          padding: 15px;
+        }
+
+        .local-fish-card {
+          padding: 15px;
+          gap: 15px;
+        }
+
+        .fish-icon-container {
+          width: 50px;
+          height: 50px;
+        }
+
+        .fish-icon {
+          font-size: 24px;
+        }
+
+        .fish-species-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- DÜZELTİLMİŞ APP HEADER - GERİ BUTONU EKLENDİ -->
+      <div class="app-header">
+        <div class="header-left">
+          <button class="back-button" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <div class="header-title">
+            <h2><i class="fas fa-magic"></i> AI Recommendations</h2>
+            <p>Based on your fishing style and weather</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-content">
+        <!-- YENİ EKLENEN LOCAL FISH SPECIES KARTI -->
+        <div class="section-title">
+          <i class="fas fa-fish"></i>
+          Fishing Resources
+        </div>
+
+        <a href="fish-species.html" class="local-fish-card">
+          <div class="fish-icon-container">
+            <i class="fas fa-fish fish-icon"></i>
+          </div>
+          <div class="fish-info">
+            <div class="fish-title">Local Fish Species</div>
+            <div class="fish-description">
+              Common fish types you can catch in this region. Learn about
+              seasons, baits, and fishing techniques.
+            </div>
+          </div>
+          <div class="fish-arrow">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+        </a>
+
+        <div class="section-title">
+          <i class="fas fa-star"></i>
+          Top Recommendation for Today
+        </div>
+
+        <div class="recommendation-card" onclick="selectSpot('Barbaros Bay')">
+          <div class="spot-header">
+            <div class="spot-name">Barbaros Bay</div>
+            <div class="success-rate">92% Match</div>
+          </div>
+
+          <div class="spot-details">
+            Perfect conditions for your fishing style. Sea bass and bream are
+            very active in this weather.
+          </div>
+
+          <div class="spot-stats">
+            <div class="stat-item">
+              <i class="fas fa-temperature-high" style="color: #ff9800"></i>
+              Water: 18°C
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-wind" style="color: #2196f3"></i>
+              Wind: 8 km/h
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-road" style="color: #4caf50"></i>
+              12 km
+            </div>
+          </div>
+
+          <div class="spot-fish">
+            <span class="fish-tag">Sea Bass</span>
+            <span class="fish-tag">Gilt-head Bream</span>
+            <span class="fish-tag">Coral</span>
+          </div>
+
+          <button class="recommend-button">
+            <i class="fas fa-directions"></i>
+            Go to This Spot
+          </button>
+        </div>
+
+        <div class="section-title">
+          <i class="fas fa-list-alt"></i>
+          Other Good Options
+        </div>
+
+        <div class="recommendation-card" onclick="selectSpot('Sandy Beach')">
+          <div class="spot-header">
+            <div class="spot-name">Sandy Beach</div>
+            <div class="success-rate">85% Match</div>
+          </div>
+
+          <div class="spot-details">
+            Sandy bottom, shallow water. Ideal for black bream and horse
+            mackerel.
+          </div>
+
+          <div class="spot-stats">
+            <div class="stat-item">
+              <i class="fas fa-temperature-high" style="color: #ff9800"></i>
+              Water: 19°C
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-wind" style="color: #2196f3"></i>
+              Wind: 10 km/h
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-road" style="color: #4caf50"></i>
+              8 km
+            </div>
+          </div>
+
+          <div class="spot-fish">
+            <span class="fish-tag">Black Bream</span>
+            <span class="fish-tag">Horse Mackerel</span>
+            <span class="fish-tag">Goatfish</span>
+          </div>
+        </div>
+
+        <div
+          class="recommendation-card"
+          onclick="selectSpot('Deep Blue Point')"
+        >
+          <div class="spot-header">
+            <div class="spot-name">Deep Blue Point</div>
+            <div class="success-rate">78% Match</div>
+          </div>
+
+          <div class="spot-details">
+            Deep water fishing spot. Best for experienced fishers looking for
+            bigger catches.
+          </div>
+
+          <div class="spot-stats">
+            <div class="stat-item">
+              <i class="fas fa-temperature-high" style="color: #ff9800"></i>
+              Water: 16°C
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-wind" style="color: #2196f3"></i>
+              Wind: 15 km/h
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-road" style="color: #4caf50"></i>
+              18 km
+            </div>
+          </div>
+
+          <div class="spot-fish">
+            <span class="fish-tag">Bluefish</span>
+            <span class="fish-tag">Tuna</span>
+            <span class="fish-tag">Bonito</span>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <i class="fas fa-lightbulb"></i>
+          Recommendation Details
+        </div>
+
+        <div
+          style="
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+          "
+        >
+          <p><strong>Why Barbaros Bay is recommended:</strong></p>
+          <ul style="margin-top: 10px; padding-left: 20px">
+            <li>Sea temperature matches your preferred fishing style</li>
+            <li>Low wind conditions for better casting</li>
+            <li>High historical success rate for sea bass</li>
+            <li>Easy access from your location</li>
+            <li>Sheltered bay - less affected by waves</li>
+          </ul>
+        </div>
+
+        <!-- DÜZELTİLMİŞ LİNK - home.html'e değil, find-spot.html'e -->
+        <button
+          onclick="viewAllSpots()"
+          style="
+            background: transparent;
+            border: 2px solid #1a237e;
+            color: #1a237e;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+          "
+        >
+          <i class="fas fa-search"></i>
+          View All Fishing Spots
+        </button>
+      </div>
+
+      <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="map.html" class="nav-item">
+          <i class="fas fa-route nav-icon"></i>
+          Map
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i class="fas fa-user nav-icon"></i>
+          Profile
+        </a>
+      </div>
+    </div>
+
+    <script>
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // DÜZELTİLMİŞ GERİ BUTONU FONKSİYONU
+      function goBack() {
+        window.history.back();
+      }
+
+      function selectSpot(spotName) {
+        alert(`"${spotName}" selected. Redirecting to map...`);
+        localStorage.setItem("selectedSpot", spotName);
+        setTimeout(() => {
+          window.location.href = "map.html";
+        }, 1000);
+      }
+
+      // YENİ EKLENEN FONKSİYON: Local Fish Species sayfasına git
+      function openFishSpecies() {
+        // Önce fish-species.html dosyasını kontrol et
+        fetch("fish-species.html")
+          .then((response) => {
+            if (response.ok) {
+              // Dosya varsa oraya git
+              window.location.href = "fish-species.html";
+            } else {
+              // Dosya yoksa alert göster ve find-spot.html'e git
+              alert(
+                "Fish Species page is being developed. Redirecting to fishing spots..."
+              );
+              window.location.href = "find-spot.html";
+            }
+          })
+          .catch(() => {
+            // Hata durumunda find-spot.html'e git
+            alert(
+              "Fish Species guide will be available soon. For now, check fishing spots."
+            );
+            window.location.href = "find-spot.html";
+          });
+      }
+
+      // DÜZELTİLMİŞ LİNK FONKSİYONU - find-spot.html'e yönlendir
+      function viewAllSpots() {
+        window.location.href = "find-spot.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login status
+        if (
+          !localStorage.getItem("userLoggedIn") ||
+          localStorage.getItem("userLoggedIn") !== "true"
+        ) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Local Fish Species kartına tıklama event'i ekle
+        const fishCard = document.querySelector(".local-fish-card");
+        if (fishCard) {
+          fishCard.addEventListener("click", function (e) {
+            e.preventDefault();
+            openFishSpecies();
+          });
+        }
+
+        // Load user preferences for better recommendations
+        const userData = localStorage.getItem("userData");
+        if (userData) {
+          try {
+            const user = JSON.parse(userData);
+            console.log(
+              "Generating recommendations for:",
+              user.fisherType || "casual"
+            );
+          } catch (e) {
+            console.log("Using default recommendations");
+          }
+        }
+
+        // Interactive elements
+        const cards = document.querySelectorAll(".recommendation-card, button");
+        cards.forEach((card) => {
+          card.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+
+          card.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        console.log("Recommendation page loaded with Local Fish Species");
+      });
+    </script>
+  </body>
+</html>

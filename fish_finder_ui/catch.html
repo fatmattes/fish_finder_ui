@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>New Catch - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .catch-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .header-title {
+        text-align: center;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .catch-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        padding-bottom: 20px;
+      }
+
+      .catch-form {
+        max-width: 360px;
+        margin: 0 auto;
+      }
+
+      .form-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .required {
+        color: #f44336;
+        margin-left: 5px;
+      }
+
+      /* FISH TYPE GRID */
+      .fish-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .fish-option {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 90px;
+      }
+
+      .fish-option:hover {
+        border-color: #1a237e;
+        background: #f5f7ff;
+      }
+
+      .fish-option.selected {
+        border-color: #1a237e;
+        background: #e3f2fd;
+        transform: scale(1.02);
+      }
+
+      .fish-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+
+      .fish-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      /* FORM CONTROLS */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s;
+        background: white;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: #1a237e;
+        box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+      }
+
+      .select-wrapper {
+        position: relative;
+      }
+
+      .select-wrapper::after {
+        content: "▼";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #1a237e;
+        pointer-events: none;
+        font-size: 12px;
+      }
+
+      /* BAIT RECOMMENDATIONS - YENİ EKLENDİ */
+      .bait-recommendations {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: 2px solid #2196f3;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .bait-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .bait-icon {
+        color: #2196f3;
+        font-size: 20px;
+      }
+
+      .bait-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a237e;
+      }
+
+      .bait-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .bait-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(33, 150, 243, 0.2);
+      }
+
+      .bait-item:last-child {
+        border-bottom: none;
+      }
+
+      .bait-item-icon {
+        width: 24px;
+        height: 24px;
+        background: #2196f3;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .bait-info {
+        flex: 1;
+      }
+
+      .bait-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 3px;
+      }
+
+      .bait-description {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .bait-success {
+        background: #e8f5e9;
+        color: #4caf50;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 8px;
+      }
+
+      /* MEASUREMENTS */
+      .measurement-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .measurement-input {
+        position: relative;
+      }
+
+      .unit-label {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 13px;
+      }
+
+      /* LOCATION CARD */
+      .location-card {
+        background: #e8f5e9;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      .location-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .location-icon {
+        color: #4caf50;
+        font-size: 18px;
+      }
+
+      .location-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+
+      .location-details {
+        color: #388e3c;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      /* SAVE BUTTON */
+      .save-button {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s;
+        box-shadow: 0 6px 20px rgba(26, 35, 126, 0.2);
+      }
+
+      .save-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+      }
+
+      .save-button:active {
+        transform: translateY(0);
+      }
+
+      /* BOTTOM NAV */
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .catch-content {
+          padding: 15px;
+        }
+
+        .fish-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .measurement-group {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">08:33 PM</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Catch Header -->
+      <div class="catch-header">
+        <div class="header-title">
+          <h1><i class="fas fa-fish"></i> FishFinder AI</h1>
+          <p>Contribute to ML Dataset</p>
+        </div>
+      </div>
+
+      <!-- Catch Content -->
+      <div class="catch-content">
+        <div class="catch-form">
+          <!-- Form Title -->
+          <div class="form-title">
+            <i class="fas fa-plus-circle"></i> New Catch
+          </div>
+
+          <!-- Fish Type Section -->
+          <div class="form-section">
+            <div class="section-title">
+              <i class="fas fa-fish"></i>
+              Fish Type <span class="required">*</span>
+            </div>
+
+            <!-- Fish Grid -->
+            <div class="fish-grid">
+              <div class="fish-option" onclick="selectFish('Sea Bass')">
+                <div class="fish-icon">
+                  <i class="fas fa-fish"></i>
+                </div>
+                <div class="fish-name">Sea Bass</div>
+              </div>
+
+              <div class="fish-option" onclick="selectFish('Sea Bream')">
+                <div class="fish-icon">
+                  <i class="fas fa-fish"></i>
+                </div>
+                <div class="fish-name">Sea Bream</div>
+              </div>
+
+              <div class="fish-option" onclick="selectFish('Bluefish')">
+                <div class="fish-icon">
+                  <i class="fas fa-fish"></i>
+                </div>
+                <div class="fish-name">Bluefish</div>
+              </div>
+
+              <div class="fish-option" onclick="selectFish('Bonito')">
+                <div class="fish-icon">
+                  <i class="fas fa-fish"></i>
+                </div>
+                <div class="fish-name">Bonito</div>
+              </div>
+
+              <div class="fish-option" onclick="selectFish('Horse Mackerel')">
+                <div class="fish-icon">
+                  <i class="fas fa-fish"></i>
+                </div>
+                <div class="fish-name">Horse Mackerel</div>
+              </div>
+
+              <div class="fish-option" onclick="selectFish('other')">
+                <div class="fish-icon">
+                  <i class="fas fa-question"></i>
+                </div>
+                <div class="fish-name">Other</div>
+              </div>
+            </div>
+
+            <!-- Fish Select Dropdown -->
+            <div class="form-group">
+              <label class="form-label">Choose Fish Type</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control"
+                  id="fishType"
+                  onchange="updateBaitRecommendations()"
+                >
+                  <option value="">Choose Fish Type...</option>
+                  <option value="sea bass">Sea Bass</option>
+                  <option value="sea bream">Sea Bream</option>
+                  <option value="bluefish">Bluefish</option>
+                  <option value="bonito">Bonito</option>
+                  <option value="horse mackerel">Horse Mackerel</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- BAIT RECOMMENDATIONS SECTION - YENİ EKLENDİ -->
+          <div class="bait-recommendations" id="baitRecommendations">
+            <div class="bait-header">
+              <i class="fas fa-magic bait-icon"></i>
+              <div class="bait-title">AI Bait Recommendations</div>
+            </div>
+            <ul class="bait-list" id="baitList">
+              <!-- Bait recommendations will be inserted here -->
+            </ul>
+          </div>
+
+          <!-- Dimensions Section -->
+          <div class="form-section">
+            <div class="section-title">
+              <i class="fas fa-ruler-combined"></i>
+              Dimensions <span class="required">*</span>
+            </div>
+
+            <div class="measurement-group">
+              <div class="form-group measurement-input">
+                <label class="form-label">Weight</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="weight"
+                  placeholder="0.0"
+                  step="0.1"
+                  min="0"
+                />
+                <span class="unit-label">kg</span>
+              </div>
+
+              <div class="form-group measurement-input">
+                <label class="form-label">Length</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="length"
+                  placeholder="0"
+                  min="0"
+                />
+                <span class="unit-label">cm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bait Used Section -->
+          <div class="form-section">
+            <div class="section-title">
+              <i class="fas fa-worm"></i>
+              Bait Used
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                id="baitUsed"
+                placeholder="Ex: Live sardines, artificial bait..."
+              />
+            </div>
+          </div>
+
+          <!-- Location Card -->
+          <div class="location-card">
+            <div class="location-header">
+              <i class="fas fa-map-marker-alt location-icon"></i>
+              <div class="location-title">Capture Location</div>
+            </div>
+            <div class="location-details" id="locationDetails">
+              <strong>Barbaros Bay, Marmaris</strong><br />
+              Latitude: 36.8549° N<br />
+              Longitude: 28.2709° E<br />
+              Date: <span id="catchDate">Loading...</span><br />
+              Time: <span id="catchTime">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Save Button -->
+          <button class="save-button" onclick="saveCatch()">
+            <i class="fas fa-robot"></i>
+            SAVE TO AI DATASET
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="map.html" class="nav-item">
+          <i class="fas fa-map nav-icon"></i>
+          Map
+        </a>
+        <a href="catch.html" class="nav-item active">
+          <i class="fas fa-plus-circle nav-icon"></i>
+          Catch
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Fish bait recommendations database
+      const baitRecommendations = {
+        "sea bass": [
+          {
+            name: "Live Sardines",
+            description: "Most effective in spring and summer",
+            successRate: "95%",
+          },
+          {
+            name: "Squid",
+            description: "Best for night fishing",
+            successRate: "88%",
+          },
+          {
+            name: "Artificial Lures",
+            description: "Surface poppers work well",
+            successRate: "82%",
+          },
+          {
+            name: "Shrimp",
+            description: "Natural bait for all seasons",
+            successRate: "85%",
+          },
+        ],
+        "sea bream": [
+          {
+            name: "Bread Dough",
+            description: "Traditional and very effective",
+            successRate: "92%",
+          },
+          {
+            name: "Mussels",
+            description: "Fresh mussels work best",
+            successRate: "87%",
+          },
+          {
+            name: "Worms",
+            description: "Earthworms or sea worms",
+            successRate: "80%",
+          },
+          {
+            name: "Corn",
+            description: "Simple but effective",
+            successRate: "75%",
+          },
+        ],
+        bluefish: [
+          {
+            name: "Metal Jigs",
+            description: "Fast retrieval recommended",
+            successRate: "90%",
+          },
+          {
+            name: "Live Baitfish",
+            description: "Mackerel or anchovy",
+            successRate: "85%",
+          },
+          {
+            name: "Surface Poppers",
+            description: "Exciting surface action",
+            successRate: "88%",
+          },
+          {
+            name: "Feather Jigs",
+            description: "For deep water fishing",
+            successRate: "82%",
+          },
+        ],
+        bonito: [
+          {
+            name: "Small Feathers",
+            description: "Fast trolling required",
+            successRate: "89%",
+          },
+          {
+            name: "Metal Spoons",
+            description: "Reflective surfaces attract",
+            successRate: "84%",
+          },
+          {
+            name: "Small Lures",
+            description: "5-10cm lures work best",
+            successRate: "86%",
+          },
+          {
+            name: "Live Anchovy",
+            description: "Most natural option",
+            successRate: "91%",
+          },
+        ],
+        "horse mackerel": [
+          {
+            name: "Small Sabiki Rigs",
+            description: "Multiple hooks increase catch",
+            successRate: "94%",
+          },
+          {
+            name: "Small Metal Jigs",
+            description: "20-40g weight ideal",
+            successRate: "87%",
+          },
+          {
+            name: "Shrimp",
+            description: "Fresh or frozen",
+            successRate: "79%",
+          },
+          {
+            name: "Small Feathers",
+            description: "Bright colors work best",
+            successRate: "83%",
+          },
+        ],
+        other: [
+          {
+            name: "Universal Bait Mix",
+            description: "Works for various fish types",
+            successRate: "75%",
+          },
+          {
+            name: "Live Bait",
+            description: "Always a good choice",
+            successRate: "80%",
+          },
+          {
+            name: "Artificial Lures",
+            description: "Versatile option",
+            successRate: "70%",
+          },
+        ],
+      };
+
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+
+        // Update catch date and time
+        document.getElementById("catchDate").textContent =
+          now.toLocaleDateString("en-US");
+        document.getElementById("catchTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Fish selection
+      let selectedFish = "";
+
+      function selectFish(fishType) {
+        selectedFish = fishType;
+
+        // Remove selection from all options
+        document.querySelectorAll(".fish-option").forEach((option) => {
+          option.classList.remove("selected");
+        });
+
+        // Add selection to clicked option
+        event.currentTarget.classList.add("selected");
+
+        // Update dropdown
+        const fishValue = fishType.toLowerCase().replace(" ", "_");
+        document.getElementById("fishType").value =
+          fishValue === "horse_mackerel" ? "horse mackerel" : fishValue;
+
+        // Update bait recommendations
+        updateBaitRecommendations();
+      }
+
+      // Update bait recommendations based on selected fish
+      function updateBaitRecommendations() {
+        const fishType = document.getElementById("fishType").value;
+        const baitSection = document.getElementById("baitRecommendations");
+        const baitList = document.getElementById("baitList");
+
+        if (fishType && baitRecommendations[fishType]) {
+          // Show bait section
+          baitSection.style.display = "block";
+
+          // Clear previous recommendations
+          baitList.innerHTML = "";
+
+          // Add new recommendations
+          baitRecommendations[fishType].forEach((bait, index) => {
+            const li = document.createElement("li");
+            li.className = "bait-item";
+
+            li.innerHTML = `
+                        <div class="bait-item-icon">${index + 1}</div>
+                        <div class="bait-info">
+                            <div class="bait-name">${
+                              bait.name
+                            } <span class="bait-success">${
+              bait.successRate
+            }</span></div>
+                            <div class="bait-description">${
+                              bait.description
+                            }</div>
+                        </div>
+                    `;
+
+            // Add click event to auto-fill bait input
+            li.addEventListener("click", function () {
+              document.getElementById("baitUsed").value = bait.name;
+              highlightBaitSuggestion(li);
+            });
+
+            baitList.appendChild(li);
+          });
+
+          // Scroll to bait section
+          baitSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } else {
+          // Hide bait section if no fish selected or no recommendations
+          baitSection.style.display = "none";
+        }
+      }
+
+      // Highlight selected bait suggestion
+      function highlightBaitSuggestion(selectedElement) {
+        document.querySelectorAll(".bait-item").forEach((item) => {
+          item.style.background = "transparent";
+          item.style.borderRadius = "0";
+        });
+
+        selectedElement.style.background = "rgba(33, 150, 243, 0.1)";
+        selectedElement.style.borderRadius = "8px";
+        selectedElement.style.padding = "10px";
+      }
+
+      // Save catch function
+      function saveCatch() {
+        const fishType = document.getElementById("fishType").value;
+        const weight = document.getElementById("weight").value;
+        const length = document.getElementById("length").value;
+        const baitUsed = document.getElementById("baitUsed").value;
+
+        // Validation
+        if (!fishType) {
+          alert("⚠️ Please select fish type.");
+          return;
+        }
+
+        if (!weight || !length) {
+          alert("⚠️ Please enter weight and length information.");
+          return;
+        }
+
+        // Get current location
+        const location = localStorage.getItem("selectedSpot") || "Barbaros Bay";
+
+        // Create catch data
+        const catchData = {
+          id: Date.now(),
+          fishType: fishType,
+          weight: weight + " kg",
+          length: length + " cm",
+          bait: baitUsed || "Not specified",
+          location: location,
+          date: new Date().toLocaleDateString("en-US"),
+          time: new Date().toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          timestamp: new Date().toISOString(),
+        };
+
+        // Save to localStorage
+        let catches = JSON.parse(localStorage.getItem("catches") || "[]");
+        catches.unshift(catchData);
+        localStorage.setItem("catches", JSON.stringify(catches));
+
+        // Update fishing statistics
+        updateFishingStats(fishType, parseFloat(weight));
+
+        // Show success message
+        alert(
+          `🎉 Catch saved successfully!\n\nFish: ${fishType}\nWeight: ${weight} kg\nLength: ${length} cm\nLocation: ${location}\nBait: ${
+            baitUsed || "Not specified"
+          }`
+        );
+
+        // Reset form
+        resetForm();
+      }
+
+      // Update fishing statistics
+      function updateFishingStats(fishType, weight) {
+        let stats = JSON.parse(localStorage.getItem("fishingStats") || "{}");
+
+        stats.totalCatches = (stats.totalCatches || 0) + 1;
+
+        if (!stats.byFishType) stats.byFishType = {};
+        stats.byFishType[fishType] = (stats.byFishType[fishType] || 0) + 1;
+
+        if (
+          !stats.biggestCatch ||
+          weight > parseFloat(stats.biggestCatch.weight)
+        ) {
+          stats.biggestCatch = { fishType, weight: weight + " kg" };
+        }
+
+        localStorage.setItem("fishingStats", JSON.stringify(stats));
+      }
+
+      // Reset form
+      function resetForm() {
+        document.getElementById("fishType").value = "";
+        document.getElementById("weight").value = "";
+        document.getElementById("length").value = "";
+        document.getElementById("baitUsed").value = "";
+        document.getElementById("baitRecommendations").style.display = "none";
+
+        document.querySelectorAll(".fish-option").forEach((option) => {
+          option.classList.remove("selected");
+        });
+
+        selectedFish = "";
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        updateTime();
+
+        // Set location from localStorage if available
+        const selectedSpot = localStorage.getItem("selectedSpot");
+        if (selectedSpot) {
+          document.getElementById("locationDetails").innerHTML = `
+                    <strong>${selectedSpot}</strong><br>
+                    Latitude: 36.8549° N<br>
+                    Longitude: 28.2709° E<br>
+                    Date: <span id="catchDate">${new Date().toLocaleDateString(
+                      "en-US"
+                    )}</span><br>
+                    Time: <span id="catchTime">${new Date().toLocaleTimeString(
+                      "en-US",
+                      { hour: "2-digit", minute: "2-digit" }
+                    )}</span>
+                `;
+        }
+
+        // Add touch feedback
+        const fishOptions = document.querySelectorAll(".fish-option");
+        fishOptions.forEach((option) => {
+          option.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          option.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        const buttons = document.querySelectorAll("button, .nav-item");
+        buttons.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        console.log(
+          "🎣 Catch page with bait recommendations loaded successfully"
+        );
+      });
+    </script>
+  </body>
+</html>

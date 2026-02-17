@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FishFinder - Emergency & Safety</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .app-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .app-header h1 {
+        font-size: 22px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .safety-indicator {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .app-content {
+        height: calc(100% - 120px);
+        overflow-y: auto;
+        padding: 20px;
+        padding-bottom: 80px;
+      }
+
+      /* Emergency SOS Section */
+      .sos-section {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sos-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .sos-description {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #856404;
+        line-height: 1.5;
+      }
+
+      .emergency-button-container {
+        position: relative;
+        margin: 30px 0;
+      }
+
+      .emergency-button {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
+        animation: pulse-emergency 2s infinite;
+        position: relative;
+        z-index: 2;
+      }
+
+      .emergency-button:active {
+        transform: scale(0.95);
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+      }
+
+      .emergency-button-inner {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .emergency-button-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+
+      .emergency-button-text {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .emergency-pulse {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 120px;
+        background: rgba(244, 67, 54, 0.2);
+        border-radius: 50%;
+        animation: pulse-ring 2s infinite;
+        z-index: 1;
+      }
+
+      /* Safety Checklist */
+      .safety-checklist {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border: 2px solid #4caf50;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+      }
+
+      .checklist-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .checklist-icon {
+        background: #4caf50;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .checklist-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        flex: 1;
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+      }
+
+      .checklist-item:last-child {
+        border-bottom: none;
+      }
+
+      .checklist-checkbox {
+        width: 28px;
+        height: 28px;
+        border: 2px solid #4caf50;
+        border-radius: 6px;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.3s;
+      }
+
+      .checklist-checkbox:active {
+        transform: scale(0.95);
+      }
+
+      .checklist-checkbox.checked {
+        background: #4caf50;
+        color: white;
+        transform: scale(1.1);
+      }
+
+      .checklist-label {
+        font-size: 15px;
+        color: #388e3c;
+        flex: 1;
+      }
+
+      /* Weather Alert */
+      .weather-alert {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 2px solid #ffc107;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+
+      .alert-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .alert-icon {
+        color: #ff9800;
+        font-size: 24px;
+      }
+
+      .alert-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ff9800;
+      }
+
+      .alert-content {
+        color: #856404;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      /* Emergency Contacts */
+      .emergency-contacts {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+      }
+
+      .contacts-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .contacts-icon {
+        color: #2196f3;
+        font-size: 24px;
+      }
+
+      .contacts-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid #e0e0e0;
+      }
+
+      .contact-item:active {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        background: #f5f5f5;
+      }
+
+      .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: #e3f2fd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2196f3;
+        font-size: 20px;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+
+      .contact-info h4 {
+        margin: 0 0 5px;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .contact-info p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .contact-call {
+        margin-left: auto;
+        background: #4caf50;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .contact-call:active {
+        transform: scale(0.95);
+        background: #388e3c;
+      }
+
+      /* Safety Tips */
+      .safety-tips {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: 2px solid #2196f3;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+
+      .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .tips-icon {
+        color: #2196f3;
+        font-size: 24px;
+      }
+
+      .tips-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a237e;
+      }
+
+      .tips-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .tips-list li {
+        padding: 8px 0;
+        color: #455a64;
+        font-size: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .tips-list li i {
+        color: #2196f3;
+        margin-top: 2px;
+      }
+
+      /* Bottom Navigation */
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        min-height: 44px;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 5px;
+      }
+
+      /* Animations */
+      @keyframes pulse-emergency {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 10px 30px rgba(244, 67, 54, 0.3);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 15px 40px rgba(244, 67, 54, 0.5);
+        }
+      }
+
+      @keyframes pulse-ring {
+        0% {
+          transform: translateX(-50%) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(-50%) scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .emergency-button {
+          width: 100px;
+          height: 100px;
+        }
+
+        .emergency-button-inner {
+          width: 85px;
+          height: 85px;
+        }
+
+        .emergency-button-icon {
+          font-size: 32px;
+        }
+
+        .emergency-button-text {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">14:30</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="home.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <h1><i class="fas fa-shield-alt"></i> Safety & Emergency</h1>
+        <div class="safety-indicator">
+          <i class="fas fa-check-circle"></i>
+          SAFETY MONITOR ACTIVE
+        </div>
+      </div>
+
+      <!-- App Content -->
+      <div class="app-content">
+        <!-- Emergency SOS Section -->
+        <div class="sos-section">
+          <div class="sos-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            Emergency SOS
+          </div>
+
+          <div class="sos-description">
+            <i class="fas fa-info-circle"></i>
+            <strong>Emergency Alert:</strong> Pressing this button will send
+            your location and emergency information to authorities and emergency
+            contacts.
+          </div>
+
+          <div class="emergency-button-container">
+            <div class="emergency-pulse"></div>
+            <button class="emergency-button" onclick="triggerEmergencySOS()">
+              <div class="emergency-button-inner">
+                <div class="emergency-button-icon">
+                  <i class="fas fa-sos"></i>
+                </div>
+                <div class="emergency-button-text">EMERGENCY SOS</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Weather Alert -->
+        <div class="weather-alert">
+          <div class="alert-header">
+            <i class="fas fa-cloud-showers-heavy alert-icon"></i>
+            <div class="alert-title">Weather Warning</div>
+          </div>
+          <div class="alert-content">
+            <strong>Storm approaching within 2 hours.</strong><br />
+            Wind speed increasing to 35 km/h. Consider returning to shore
+            immediately. Sea conditions will deteriorate rapidly.
+          </div>
+        </div>
+
+        <!-- Safety Checklist -->
+        <div class="safety-checklist">
+          <div class="checklist-header">
+            <div class="checklist-icon">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <div class="checklist-title">Safety Checklist</div>
+          </div>
+
+          <div class="checklist-item">
+            <div
+              class="checklist-checkbox checked"
+              onclick="toggleCheckbox(this)"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">Life Jacket On</div>
+          </div>
+
+          <div class="checklist-item">
+            <div class="checklist-checkbox" onclick="toggleCheckbox(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">VHF Radio Working</div>
+          </div>
+
+          <div class="checklist-item">
+            <div
+              class="checklist-checkbox checked"
+              onclick="toggleCheckbox(this)"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">GPS Signal Strong</div>
+          </div>
+
+          <div class="checklist-item">
+            <div class="checklist-checkbox" onclick="toggleCheckbox(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">First Aid Kit Available</div>
+          </div>
+
+          <div class="checklist-item">
+            <div
+              class="checklist-checkbox checked"
+              onclick="toggleCheckbox(this)"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">Emergency Flares Ready</div>
+          </div>
+
+          <div class="checklist-item">
+            <div class="checklist-checkbox" onclick="toggleCheckbox(this)">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="checklist-label">Weather Checked</div>
+          </div>
+        </div>
+
+        <!-- Emergency Contacts -->
+        <div class="emergency-contacts">
+          <div class="contacts-header">
+            <i class="fas fa-phone-alt contacts-icon"></i>
+            <div class="contacts-title">Emergency Contacts</div>
+          </div>
+
+          <div class="contact-item" onclick="callEmergency('coast-guard')">
+            <div class="contact-icon">
+              <i class="fas fa-ship"></i>
+            </div>
+            <div class="contact-info">
+              <h4>Coast Guard</h4>
+              <p>Emergency at sea</p>
+            </div>
+            <button class="contact-call">
+              <i class="fas fa-phone"></i>
+            </button>
+          </div>
+
+          <div class="contact-item" onclick="callEmergency('medical')">
+            <div class="contact-icon">
+              <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="contact-info">
+              <h4>Medical Emergency</h4>
+              <p>Health emergencies</p>
+            </div>
+            <button class="contact-call">
+              <i class="fas fa-phone"></i>
+            </button>
+          </div>
+
+          <div
+            class="contact-item"
+            onclick="callEmergency('fishing-community')"
+          >
+            <div class="contact-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="contact-info">
+              <h4>Fishing Community</h4>
+              <p>Local fishing support</p>
+            </div>
+            <button class="contact-call">
+              <i class="fas fa-phone"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Safety Tips -->
+        <div class="safety-tips">
+          <div class="tips-header">
+            <i class="fas fa-lightbulb tips-icon"></i>
+            <div class="tips-title">Safety Tips</div>
+          </div>
+          <ul class="tips-list">
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Always wear a life jacket when on water
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Check weather forecast before fishing
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Keep emergency equipment accessible
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Share your fishing plan with someone
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              Monitor weather changes regularly
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="map.html" class="nav-item">
+          <i class="fas fa-map nav-icon"></i>
+          Map
+        </a>
+        <a href="emergency.html" class="nav-item active">
+          <i class="fas fa-shield-alt nav-icon"></i>
+          Safety
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      // Checkbox toggle
+      function toggleCheckbox(element) {
+        element.classList.toggle("checked");
+
+        // Update safety score
+        const checkedItems = document.querySelectorAll(
+          ".checklist-checkbox.checked"
+        ).length;
+        const totalItems = document.querySelectorAll(
+          ".checklist-checkbox"
+        ).length;
+        const safetyScore = Math.round((checkedItems / totalItems) * 100);
+
+        console.log(`Safety Checklist Score: ${safetyScore}%`);
+      }
+
+      // Emergency SOS function
+      function triggerEmergencySOS() {
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const userName =
+          localStorage.getItem("userName") || userData.fullName || "Fisher";
+
+        // Show confirmation
+        if (
+          confirm(
+            "🚨 EMERGENCY SOS\n\nAre you sure you want to trigger emergency alert?\n\nThis will:\n• Send your location to authorities\n• Notify your emergency contacts\n• Activate rescue services"
+          )
+        ) {
+          // Collect emergency data
+          const emergencyData = {
+            userId: localStorage.getItem("userEmail") || "unknown",
+            userName: userName,
+            timestamp: new Date().toISOString(),
+            location: {
+              latitude: "36.8549",
+              longitude: "28.2709",
+              locationName:
+                localStorage.getItem("selectedSpot") || "Unknown Location",
+            },
+            checklistScore: calculateSafetyScore(),
+            weather: "Storm approaching, high winds",
+            battery: "85%",
+            signal: "Good",
+          };
+
+          // Save emergency log
+          let emergencyLogs = JSON.parse(
+            localStorage.getItem("emergencyLogs") || "[]"
+          );
+          emergencyLogs.push(emergencyData);
+          localStorage.setItem("emergencyLogs", JSON.stringify(emergencyLogs));
+
+          // Simulate sending alert
+          const emergencyButton = document.querySelector(".emergency-button");
+          const originalHTML = emergencyButton.innerHTML;
+
+          emergencyButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          emergencyButton.style.animation = "none";
+          emergencyButton.disabled = true;
+
+          setTimeout(() => {
+            alert(
+              "✅ EMERGENCY ALERT SENT\n\nYour location and emergency information has been sent to:\n\n• Coast Guard\n• Emergency contacts\n• Nearby fishing community\n\nStay calm and wait for assistance. Help is on the way!"
+            );
+
+            emergencyButton.innerHTML = originalHTML;
+            emergencyButton.style.animation = "pulse-emergency 2s infinite";
+            emergencyButton.disabled = false;
+
+            // Log emergency
+            console.log("🚨 Emergency SOS activated:", emergencyData);
+          }, 2000);
+        }
+      }
+
+      // Calculate safety score
+      function calculateSafetyScore() {
+        const checkedItems = document.querySelectorAll(
+          ".checklist-checkbox.checked"
+        ).length;
+        const totalItems = document.querySelectorAll(
+          ".checklist-checkbox"
+        ).length;
+        return Math.round((checkedItems / totalItems) * 100);
+      }
+
+      // Call emergency number
+      function callEmergency(type) {
+        const numbers = {
+          "coast-guard": "158",
+          medical: "112",
+          "fishing-community": "0232 123 4567",
+        };
+
+        const names = {
+          "coast-guard": "Coast Guard",
+          medical: "Medical Emergency",
+          "fishing-community": "Fishing Community",
+        };
+
+        const number = numbers[type];
+        const name = names[type];
+
+        if (
+          confirm(
+            `Call ${name}?\n\nPhone: ${number}\n\nThis will open your phone app to make the call.`
+          )
+        ) {
+          // For mobile devices, open phone app
+          if (/Mobi|Android/i.test(navigator.userAgent)) {
+            window.location.href = `tel:${number}`;
+          } else {
+            alert(`On a mobile device, this would call ${name} at ${number}`);
+          }
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Update time
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Load previous checklist state
+        const savedChecklist = JSON.parse(
+          localStorage.getItem("safetyChecklist") || "{}"
+        );
+        const checkboxes = document.querySelectorAll(".checklist-checkbox");
+        checkboxes.forEach((checkbox, index) => {
+          if (savedChecklist[index]) {
+            checkbox.classList.add("checked");
+          }
+        });
+
+        // Save checklist state on change
+        document
+          .querySelectorAll(".checklist-checkbox")
+          .forEach((checkbox, index) => {
+            checkbox.addEventListener("click", function () {
+              const checkboxes = document.querySelectorAll(
+                ".checklist-checkbox"
+              );
+              const checklistState = {};
+              checkboxes.forEach((cb, i) => {
+                checklistState[i] = cb.classList.contains("checked");
+              });
+              localStorage.setItem(
+                "safetyChecklist",
+                JSON.stringify(checklistState)
+              );
+            });
+          });
+
+        // Touch feedback
+        const interactiveElements = document.querySelectorAll(
+          "button, .nav-item, .contact-item, .checklist-checkbox"
+        );
+
+        interactiveElements.forEach((el) => {
+          el.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+
+          el.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        console.log("Safety & Emergency page loaded");
+      });
+    </script>
+  </body>
+</html>

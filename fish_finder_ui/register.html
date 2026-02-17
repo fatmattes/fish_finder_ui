@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .register-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 40px 20px 30px;
+        text-align: center;
+      }
+
+      .register-header h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .register-header p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .register-content {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+      }
+
+      .form-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 15px;
+      }
+
+      .input-with-icon {
+        position: relative;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 16px 45px 16px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #1a237e;
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 18px;
+      }
+
+      .fisher-type {
+        margin: 20px 0;
+      }
+
+      .type-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .type-option {
+        padding: 15px 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .type-option.selected {
+        border-color: #1a237e;
+        background: #f0f7ff;
+      }
+
+      .type-icon {
+        font-size: 24px;
+        color: #1a237e;
+        margin-bottom: 8px;
+      }
+
+      .type-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+      }
+
+      .register-button {
+        background: #1a237e;
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+      }
+
+      .register-button:active {
+        transform: scale(0.98);
+        background: #283593;
+      }
+
+      .terms {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 20px 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .terms input[type="checkbox"] {
+        margin-top: 3px;
+        width: 18px;
+        height: 18px;
+      }
+
+      .terms a {
+        color: #1a237e;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #666;
+        font-size: 15px;
+      }
+
+      .login-link a {
+        color: #1a237e;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .register-content {
+          padding: 20px;
+        }
+
+        .type-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Register Header -->
+      <div class="register-header">
+        <h1><i class="fas fa-fish"></i> FishFinder</h1>
+        <p>Create your account</p>
+      </div>
+
+      <!-- Register Content -->
+      <div class="register-content">
+        <div class="form-title">Sign Up</div>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-with-icon">
+            <input
+              type="text"
+              class="form-input"
+              id="fullName"
+              placeholder="John Fisher"
+            />
+            <i class="fas fa-user input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <div class="input-with-icon">
+            <input
+              type="email"
+              class="form-input"
+              id="email"
+              placeholder="your.email@example.com"
+            />
+            <i class="fas fa-envelope input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-with-icon">
+            <input
+              type="password"
+              class="form-input"
+              id="password"
+              placeholder="Minimum 6 characters"
+            />
+            <i class="fas fa-lock input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-with-icon">
+            <input
+              type="password"
+              class="form-input"
+              id="confirmPassword"
+              placeholder="Re-enter password"
+            />
+            <i class="fas fa-lock input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Fisher Type -->
+        <div class="fisher-type">
+          <label class="form-label">Fishing Experience</label>
+          <div class="type-grid">
+            <div class="type-option selected" onclick="selectType('hobbyist')">
+              <div class="type-icon">
+                <i class="fas fa-umbrella-beach"></i>
+              </div>
+              <div class="type-name">Hobbyist</div>
+            </div>
+
+            <div class="type-option" onclick="selectType('professional')">
+              <div class="type-icon">
+                <i class="fas fa-anchor"></i>
+              </div>
+              <div class="type-name">Professional</div>
+            </div>
+
+            <div class="type-option" onclick="selectType('guide')">
+              <div class="type-icon">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="type-name">Guide</div>
+            </div>
+
+            <div class="type-option" onclick="selectType('advanced')">
+              <div class="type-icon">
+                <i class="fas fa-trophy"></i>
+              </div>
+              <div class="type-name">Advanced</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms">
+          <input type="checkbox" id="termsCheckbox" />
+          <label for="termsCheckbox">
+            I agree to the <a href="#">Terms</a> and
+            <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+
+        <!-- Register Button -->
+        <button class="register-button" onclick="handleRegister()">
+          <i class="fas fa-user-plus"></i>
+          Create Account
+        </button>
+
+        <!-- Login Link -->
+        <div class="login-link">
+          Already have an account?
+          <a href="login.html">Sign in here</a>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-tachometer-alt nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i class="fas fa-user nav-icon"></i>
+          Profile
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      let selectedType = "hobbyist";
+
+      function selectType(type) {
+        // Remove selected class from all
+        const options = document.querySelectorAll(".type-option");
+        options.forEach((option) => option.classList.remove("selected"));
+
+        // Add selected to clicked
+        event.currentTarget.classList.add("selected");
+        selectedType = type;
+      }
+
+      function handleRegister() {
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document
+          .getElementById("confirmPassword")
+          .value.trim();
+        const termsAccepted = document.getElementById("termsCheckbox").checked;
+
+        // Validation
+        if (!fullName || !email || !password || !confirmPassword) {
+          alert("Please fill in all fields");
+          return;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+          alert("Please enter a valid email address");
+          return;
+        }
+
+        if (password.length < 6) {
+          alert("Password must be at least 6 characters");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alert("Passwords don't match");
+          return;
+        }
+
+        if (!termsAccepted) {
+          alert("Please accept the terms and conditions");
+          return;
+        }
+
+        const button = event.currentTarget;
+        const originalText = button.innerHTML;
+        button.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+        button.disabled = true;
+
+        setTimeout(() => {
+          // Save user data to localStorage
+          const userData = {
+            fullName: fullName,
+            email: email,
+            fisherType: selectedType,
+            registrationDate: new Date().toISOString(),
+            role: "user",
+            preferences: {
+              fishingType: selectedType === "professional" ? "sea" : "all",
+              notifications: true,
+              theme: "default",
+              language: "en",
+            },
+          };
+
+          // Store all user data
+          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem("userLoggedIn", "true");
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("userName", fullName);
+          localStorage.setItem("fisherType", selectedType);
+          localStorage.setItem("userRole", "user");
+
+          button.innerHTML = originalText;
+          button.disabled = false;
+
+          alert("Account created successfully! Welcome to FishFinder 🎣");
+          window.location.href = "home.html";
+        }, 1200);
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if already logged in
+        if (localStorage.getItem("userLoggedIn") === "true") {
+          window.location.href = "home.html";
+          return;
+        }
+
+        // Touch feedback
+        const typeOptions = document.querySelectorAll(".type-option");
+        typeOptions.forEach((option) => {
+          option.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          option.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        const buttons = document.querySelectorAll("button, .nav-item");
+        buttons.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        // Clear any previous demo/guest data
+        localStorage.removeItem("touristMode");
+        localStorage.removeItem("isTourist");
+        localStorage.removeItem("isGuest");
+        localStorage.removeItem("guestLogin");
+
+        console.log("Register page loaded successfully");
+      });
+    </script>
+  </body>
+</html>

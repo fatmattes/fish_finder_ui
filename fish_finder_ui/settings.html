@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>FishFinder AI - Settings</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .app-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .back-button {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+      }
+
+      .back-button:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .header-title h2 {
+        font-size: 20px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .ai-badge {
+        background: linear-gradient(135deg, #00bcd4 0%, #00838f 100%);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        animation: pulse 2s infinite;
+      }
+
+      .app-content {
+        height: calc(100% - 120px);
+        overflow-y: auto;
+        padding: 20px;
+        padding-bottom: 80px;
+      }
+
+      .settings-section {
+        margin-bottom: 25px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a237e;
+        margin: 20px 0 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .settings-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 15px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .settings-item:active {
+        transform: scale(0.98);
+        background: #f8f9ff;
+        border-color: #1a237e;
+      }
+
+      .item-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .item-icon {
+        width: 40px;
+        height: 40px;
+        background: #e8eaf6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #1a237e;
+      }
+
+      .item-icon.ai {
+        background: linear-gradient(135deg, #00bcd4 0%, #00838f 100%);
+        color: white;
+      }
+
+      .item-info h4 {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .item-info p {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .item-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #666;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: #1a237e;
+      }
+
+      input:checked + .slider.ai-active {
+        background-color: #00bcd4;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(24px);
+      }
+
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .select-dropdown {
+        padding: 8px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        background: white;
+        color: #333;
+        font-size: 14px;
+        min-width: 120px;
+        cursor: pointer;
+      }
+
+      .ai-model-info {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #455a64;
+        line-height: 1.4;
+        display: none;
+      }
+
+      .ai-model-info.show {
+        display: block;
+      }
+
+      .ai-model-info .info-icon {
+        color: #2196f3;
+        margin-right: 8px;
+      }
+
+      .fisher-type-display {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .fisher-type-display.hobby {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      }
+
+      .fisher-type-display.professional {
+        background: linear-gradient(135deg, #ff9800 0%, #ef6c00 100%);
+      }
+
+      .fisher-type-display.guide {
+        background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+      }
+
+      .fisher-type-display.advanced {
+        background: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
+      }
+
+      .logout-button {
+        background: #f44336;
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-top: 30px;
+        transition: all 0.3s;
+      }
+
+      .logout-button:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+        background: #d32f2f;
+      }
+
+      .save-button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s;
+      }
+
+      .save-button:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+        background: #388e3c;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 5px;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .settings-item {
+          padding: 15px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i
+            class="fas fa-brain"
+            style="margin-right: 10px; color: #00bcd4"
+          ></i>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <div class="app-header">
+        <div class="header-left">
+          <a href="home.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+          </a>
+          <div class="header-title">
+            <h2><i class="fas fa-cog"></i> AI Settings</h2>
+            <p>Manage AI models & preferences</p>
+          </div>
+          <div class="ai-badge">
+            <i class="fas fa-brain"></i>
+            AI ACTIVE
+          </div>
+        </div>
+      </div>
+
+      <div class="app-content">
+        <!-- AI MODEL SETTINGS -->
+        <div class="settings-section">
+          <div class="section-title">
+            <i class="fas fa-robot"></i>
+            AI Model Preferences
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon ai">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="item-info">
+                <h4>Fish Prediction Model</h4>
+                <p>Balance between speed and accuracy</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <select class="select-dropdown" id="aiModelSelect">
+                <option value="fast">Fast (Quick predictions)</option>
+                <option value="balanced" selected>
+                  Balanced (Recommended)
+                </option>
+                <option value="accurate">High Accuracy (Slow)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-item" onclick="toggleModelInfo()">
+            <div class="item-left">
+              <div class="item-icon ai">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="item-info">
+                <h4>Historical Analysis Depth</h4>
+                <p>How far back AI analyzes patterns</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <select class="select-dropdown" id="historyDepthSelect">
+                <option value="1month">1 Month</option>
+                <option value="3months" selected>3 Months</option>
+                <option value="6months">6 Months</option>
+                <option value="1year">1 Year</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ai-model-info" id="modelInfo">
+            <i class="fas fa-info-circle info-icon"></i>
+            <strong>AI Model Information:</strong> The prediction model uses
+            machine learning to analyze water temperature, weather patterns, and
+            historical catch data. Higher accuracy models use more computational
+            resources.
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon ai">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="item-info">
+                <h4>Real-time AI Updates</h4>
+                <p>Update AI predictions in real-time</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="realtimeAiToggle" checked />
+                <span class="slider round ai-active"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATA & PRIVACY -->
+        <div class="settings-section">
+          <div class="section-title">
+            <i class="fas fa-database"></i>
+            AI Data & Privacy
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-share-alt"></i>
+              </div>
+              <div class="item-info">
+                <h4>Share Data for AI Training</h4>
+                <p>Anonymous data helps improve AI models</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="dataSharingToggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-item" onclick="manageTrainingData()">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="item-info">
+                <h4>AI Training Data</h4>
+                <p>View or delete your contributed data</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+
+          <div class="settings-item" onclick="exportAiData()">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-file-export"></i>
+              </div>
+              <div class="item-info">
+                <h4>Export AI Insights</h4>
+                <p>Download your personal AI analysis</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- REAL-TIME ALERTS -->
+        <div class="settings-section">
+          <div class="section-title">
+            <i class="fas fa-bell"></i>
+            AI Smart Alerts
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-water"></i>
+              </div>
+              <div class="item-info">
+                <h4>Environmental Alerts</h4>
+                <p>Water temp, wind, wave changes</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="environmentalAlertsToggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-fish"></i>
+              </div>
+              <div class="item-info">
+                <h4>Fish Pattern Alerts</h4>
+                <p>AI detects optimal fishing times</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="patternAlertsToggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="item-info">
+                <h4>AI Safety Alerts</h4>
+                <p>Weather warnings, risk assessments</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="safetyAlertsToggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- FISHER TYPE MANAGEMENT -->
+        <div class="settings-section">
+          <div class="section-title">
+            <i class="fas fa-user-tie"></i>
+            Fisher Type Management
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-id-card"></i>
+              </div>
+              <div class="item-info">
+                <h4>Your Fisher Type</h4>
+                <p>Current account type and features</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <div class="fisher-type-display" id="fisherTypeDisplay">
+                Loading...
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-item" onclick="upgradeAccount()">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-arrow-up"></i>
+              </div>
+              <div class="item-info">
+                <h4>Upgrade Account</h4>
+                <p>Get access to advanced AI features</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <i class="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- APPEARANCE & UNITS -->
+        <div class="settings-section">
+          <div class="section-title">
+            <i class="fas fa-palette"></i>
+            Appearance & Units
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-ruler"></i>
+              </div>
+              <div class="item-info">
+                <h4>Measurement Units</h4>
+                <p>For AI predictions and data</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <select class="select-dropdown" id="unitsSelect">
+                <option value="metric">Metric (km, m, °C)</option>
+                <option value="imperial">Imperial (miles, ft, °F)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-item">
+            <div class="item-left">
+              <div class="item-icon">
+                <i class="fas fa-moon"></i>
+              </div>
+              <div class="item-info">
+                <h4>Dark Mode</h4>
+                <p>Switch between themes</p>
+              </div>
+            </div>
+            <div class="item-right">
+              <label class="switch">
+                <input type="checkbox" id="darkModeToggle" />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Settings Button -->
+        <button class="save-button" onclick="saveAllSettings()">
+          <i class="fas fa-save"></i>
+          Save All Settings
+        </button>
+
+        <!-- Logout Button -->
+        <button class="logout-button" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+
+      <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="map.html" class="nav-item">
+          <i class="fas fa-map nav-icon"></i>
+          Map
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <i class="fas fa-cog nav-icon"></i>
+          Settings
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Toggle AI model info
+      function toggleModelInfo() {
+        const info = document.getElementById("modelInfo");
+        info.classList.toggle("show");
+      }
+
+      // Manage training data
+      function manageTrainingData() {
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const userName =
+          localStorage.getItem("userName") || userData.fullName || "User";
+
+        alert(
+          "🤖 AI Training Data Management\n\n" +
+            `👤 User: ${userName}\n` +
+            "📊 Data: Anonymous fishing patterns and catch data\n" +
+            "🔒 Privacy: All data is anonymized and encrypted\n\n" +
+            "Your data helps improve AI predictions for the entire fishing community!"
+        );
+      }
+
+      // Export AI data
+      function exportAiData() {
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const userName =
+          localStorage.getItem("userName") || userData.fullName || "User";
+        const fisherType = localStorage.getItem("fisherType") || "hobbyist";
+
+        const exportData = {
+          userInfo: {
+            name: userName,
+            fisherType: fisherType,
+            memberSince: userData.registrationDate || new Date().toISOString(),
+          },
+          aiSettings: {
+            model: localStorage.getItem("aiModelPreference") || "balanced",
+            realtimeAI: localStorage.getItem("realtimeAI") === "true",
+            historyDepth: localStorage.getItem("aiHistoryDepth") || "3months",
+          },
+          fishingData: {
+            favoriteSpots: JSON.parse(
+              localStorage.getItem("favoriteSpots") || "[]"
+            ),
+            catches: JSON.parse(localStorage.getItem("catches") || "[]"),
+            successRate:
+              document.getElementById("successRate")?.textContent || "0%",
+          },
+          exportDate: new Date().toISOString(),
+        };
+
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const fileName = `FishFinder_AI_Data_${Date.now()}.json`;
+
+        // Create download link
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert("✅ AI data exported successfully!\n\nFile: " + fileName);
+      }
+
+      // Upgrade account
+      function upgradeAccount() {
+        const currentType = localStorage.getItem("fisherType") || "hobbyist";
+        const types = {
+          hobbyist: {
+            next: "professional",
+            price: "$9.99/month",
+            features: [
+              "Advanced AI predictions",
+              "Historical analysis",
+              "Real-time weather AI",
+            ],
+          },
+          professional: {
+            next: "guide",
+            price: "$19.99/month",
+            features: [
+              "All Pro features",
+              "AI route planning",
+              "Commercial use",
+            ],
+          },
+          guide: {
+            next: "advanced",
+            price: "$29.99/month",
+            features: ["All Guide features", "API access", "Team management"],
+          },
+          advanced: {
+            next: null,
+            price: "Maximum tier",
+            features: [
+              "All features unlocked",
+              "Priority support",
+              "Custom AI models",
+            ],
+          },
+        };
+
+        const nextType = types[currentType];
+
+        if (!nextType || !nextType.next) {
+          alert("🎉 You already have the highest tier!");
+          return;
+        }
+
+        alert(
+          `🚀 Upgrade to ${nextType.next.toUpperCase()}\n\n` +
+            `💰 Price: ${nextType.price}\n\n` +
+            `✨ New AI Features:\n` +
+            nextType.features.map((f) => `• ${f}`).join("\n") +
+            `\n\n` +
+            `Would you like to upgrade?`
+        );
+      }
+
+      // Save all settings
+      function saveAllSettings() {
+        // Save AI settings
+        const aiModel = document.getElementById("aiModelSelect").value;
+        localStorage.setItem("aiModelPreference", aiModel);
+
+        const historyDepth =
+          document.getElementById("historyDepthSelect").value;
+        localStorage.setItem("aiHistoryDepth", historyDepth);
+
+        const realtimeAI = document.getElementById("realtimeAiToggle").checked;
+        localStorage.setItem("realtimeAI", realtimeAI);
+
+        // Save data sharing
+        const dataSharing =
+          document.getElementById("dataSharingToggle").checked;
+        localStorage.setItem("aiDataSharing", dataSharing);
+
+        // Save alert settings
+        const envAlerts = document.getElementById(
+          "environmentalAlertsToggle"
+        ).checked;
+        localStorage.setItem("environmentalAlerts", envAlerts);
+
+        const patternAlerts = document.getElementById(
+          "patternAlertsToggle"
+        ).checked;
+        localStorage.setItem("patternAlerts", patternAlerts);
+
+        const safetyAlerts =
+          document.getElementById("safetyAlertsToggle").checked;
+        localStorage.setItem("safetyAlerts", safetyAlerts);
+
+        // Save appearance settings
+        const units = document.getElementById("unitsSelect").value;
+        localStorage.setItem("measurementUnits", units);
+
+        const darkMode = document.getElementById("darkModeToggle").checked;
+        localStorage.setItem("darkMode", darkMode);
+
+        // Update user data
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        userData.aiSettings = {
+          model: aiModel,
+          historyDepth: historyDepth,
+          realtimeAI: realtimeAI,
+          dataSharing: dataSharing,
+          alerts: {
+            environmental: envAlerts,
+            patterns: patternAlerts,
+            safety: safetyAlerts,
+          },
+          appearance: {
+            units: units,
+            darkMode: darkMode,
+          },
+        };
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        // Show success message
+        alert("✅ All settings saved successfully!");
+
+        // Apply dark mode if enabled
+        if (darkMode) {
+          document.body.style.background = "#121212";
+          document.querySelector(".mobile-container").style.background =
+            "#1e1e1e";
+          document.querySelector(".mobile-container").style.color = "white";
+        }
+      }
+
+      // Load all settings
+      function loadAllSettings() {
+        // Load AI settings
+        const savedModel =
+          localStorage.getItem("aiModelPreference") || "balanced";
+        document.getElementById("aiModelSelect").value = savedModel;
+
+        const savedHistory =
+          localStorage.getItem("aiHistoryDepth") || "3months";
+        document.getElementById("historyDepthSelect").value = savedHistory;
+
+        const savedRealtime = localStorage.getItem("realtimeAI") !== "false";
+        document.getElementById("realtimeAiToggle").checked = savedRealtime;
+
+        // Load data sharing
+        const savedDataSharing =
+          localStorage.getItem("aiDataSharing") !== "false";
+        document.getElementById("dataSharingToggle").checked = savedDataSharing;
+
+        // Load alert settings
+        const savedEnvAlerts =
+          localStorage.getItem("environmentalAlerts") !== "false";
+        document.getElementById("environmentalAlertsToggle").checked =
+          savedEnvAlerts;
+
+        const savedPatternAlerts =
+          localStorage.getItem("patternAlerts") !== "false";
+        document.getElementById("patternAlertsToggle").checked =
+          savedPatternAlerts;
+
+        const savedSafetyAlerts =
+          localStorage.getItem("safetyAlerts") !== "false";
+        document.getElementById("safetyAlertsToggle").checked =
+          savedSafetyAlerts;
+
+        // Load appearance settings
+        const savedUnits = localStorage.getItem("measurementUnits") || "metric";
+        document.getElementById("unitsSelect").value = savedUnits;
+
+        const savedDarkMode = localStorage.getItem("darkMode") === "true";
+        document.getElementById("darkModeToggle").checked = savedDarkMode;
+
+        // Load fisher type
+        updateFisherTypeDisplay();
+
+        // Apply dark mode if enabled
+        if (savedDarkMode) {
+          document.body.style.background = "#121212";
+          document.querySelector(".mobile-container").style.background =
+            "#1e1e1e";
+          document.querySelector(".mobile-container").style.color = "white";
+        }
+      }
+
+      // Update fisher type display
+      function updateFisherTypeDisplay() {
+        const fisherType = localStorage.getItem("fisherType") || "hobbyist";
+        const display = document.getElementById("fisherTypeDisplay");
+
+        const typeNames = {
+          hobbyist: "HOBBYIST",
+          professional: "PROFESSIONAL",
+          guide: "GUIDE",
+          advanced: "ADVANCED",
+        };
+
+        display.textContent = typeNames[fisherType] || fisherType.toUpperCase();
+        display.className = "fisher-type-display " + fisherType;
+      }
+
+      // Logout
+      function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+          // Save settings before logout
+          saveAllSettings();
+
+          // Clear session
+          localStorage.removeItem("userLoggedIn");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userName");
+
+          alert("👋 Successfully logged out!");
+          window.location.href = "login.html";
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Load all settings
+        loadAllSettings();
+
+        // Add touch feedback
+        const settingsItems = document.querySelectorAll(".settings-item");
+        settingsItems.forEach((item) => {
+          item.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          item.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        console.log("Settings page loaded successfully");
+      });
+    </script>
+  </body>
+</html>

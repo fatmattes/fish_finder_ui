@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Spot - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .findspot-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .findspot-content {
+        flex: 1;
+        padding: 25px;
+        overflow-y: auto;
+        padding-bottom: 20px;
+      }
+
+      .main-button {
+        background: #1a237e;
+        color: white;
+        border: none;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 18px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        cursor: pointer;
+        margin-bottom: 25px;
+        transition: all 0.3s;
+      }
+
+      .main-button:active {
+        transform: scale(0.98);
+        background: #283593;
+      }
+
+      .loading-section {
+        background: #f8f9ff;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        display: none;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e0e0e0;
+        border-top-color: #1a237e;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        animation: spin 1s linear infinite;
+      }
+
+      .result-section {
+        background: white;
+        border: 2px solid #4caf50;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .result-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .result-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 10px;
+      }
+
+      .success-badge {
+        background: #4caf50;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        display: inline-block;
+      }
+
+      .result-details {
+        margin: 20px 0;
+      }
+
+      .detail-row {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-icon {
+        width: 36px;
+        height: 36px;
+        background: #e8f5e9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: #4caf50;
+        font-size: 16px;
+      }
+
+      .detail-text h4 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        color: #333;
+      }
+
+      .detail-text p {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .action-btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: #1a237e;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #e0e0e0;
+      }
+
+      .action-btn:active {
+        transform: scale(0.98);
+      }
+
+      .recent-spots {
+        margin-top: 25px;
+      }
+
+      .section-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .spots-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .spot-item {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .spot-item:active {
+        transform: scale(0.98);
+        border-color: #1a237e;
+      }
+
+      .spot-icon {
+        width: 40px;
+        height: 40px;
+        background: #e3f2fd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1a237e;
+        font-size: 18px;
+      }
+
+      .spot-content h4 {
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 4px;
+      }
+
+      .spot-content p {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 4px;
+      }
+
+      .spot-rating {
+        font-size: 12px;
+        color: #ff9800;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .findspot-content {
+          padding: 20px;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Find Spot Header -->
+      <div class="findspot-header">
+        <div class="header-title">
+          <h1><i class="fas fa-map-marked-alt"></i> Find Spot</h1>
+          <p>Discover fishing locations</p>
+        </div>
+      </div>
+
+      <!-- Find Spot Content -->
+      <div class="findspot-content">
+        <!-- Main Find Button -->
+        <button class="main-button" onclick="findSpot()">
+          <i class="fas fa-search"></i>
+          Find Fishing Spot
+        </button>
+
+        <!-- Loading Section -->
+        <div class="loading-section" id="loadingSection">
+          <div class="loading-spinner"></div>
+          <p>Finding best fishing spots...</p>
+          <p style="font-size: 13px; color: #666; margin-top: 8px">
+            Checking weather and conditions
+          </p>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+          <div class="result-header">
+            <div class="result-title">Recommended Spot</div>
+            <div class="success-badge" id="successRate">85%</div>
+          </div>
+
+          <div class="result-details">
+            <div class="detail-row">
+              <div class="detail-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="detail-text">
+                <h4 id="spotName">Barbaros Bay</h4>
+                <p id="spotLocation">Marmaris • 12 km away</p>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <div class="detail-icon">
+                <i class="fas fa-fish"></i>
+              </div>
+              <div class="detail-text">
+                <h4>Fish Species</h4>
+                <p id="fishSpecies">Sea Bass, Bream, Coral</p>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <div class="detail-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="detail-text">
+                <h4>Best Time</h4>
+                <p id="bestTime">Morning 05:00-08:00</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-primary" onclick="viewOnMap()">
+              <i class="fas fa-map"></i>
+              View on Map
+            </button>
+            <button
+              class="action-btn btn-secondary"
+              onclick="saveToFavorites()"
+            >
+              <i class="fas fa-heart"></i>
+              Save
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Spots -->
+        <div class="recent-spots">
+          <div class="section-title">
+            <i class="fas fa-history"></i>
+            Recent Spots
+          </div>
+          <div class="spots-list">
+            <div class="spot-item" onclick="selectSpot('Kumluk Beach')">
+              <div class="spot-icon">
+                <i class="fas fa-umbrella-beach"></i>
+              </div>
+              <div class="spot-content">
+                <h4>Kumluk Beach</h4>
+                <p>3 km away • Good for beginners</p>
+                <div class="spot-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="spot-item" onclick="selectSpot('Deep Water Point')">
+              <div class="spot-icon">
+                <i class="fas fa-water"></i>
+              </div>
+              <div class="spot-content">
+                <h4>Deep Water Point</h4>
+                <p>8 km away • Deep sea fishing</p>
+                <div class="spot-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="spot-item" onclick="selectSpot('Rocky Cove')">
+              <div class="spot-icon">
+                <i class="fas fa-mountain"></i>
+              </div>
+              <div class="spot-content">
+                <h4>Rocky Cove</h4>
+                <p>15 km away • Advanced fishing</p>
+                <div class="spot-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-tachometer-alt nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="find-spot.html" class="nav-item active">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i class="fas fa-user nav-icon"></i>
+          Profile
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Fishing spots data
+      const fishingSpots = [
+        {
+          name: "Barbaros Bay",
+          location: "Marmaris • 12 km away",
+          successRate: 85,
+          fishSpecies: "Sea Bass, Bream, Coral",
+          bestTime: "Morning 05:00-08:00",
+        },
+        {
+          name: "Kumluk Beach",
+          location: "Marmaris • 3 km away",
+          successRate: 75,
+          fishSpecies: "Small fish, Shrimp",
+          bestTime: "Afternoon 14:00-17:00",
+        },
+        {
+          name: "Deep Water Point",
+          location: "Open Sea • 8 km away",
+          successRate: 90,
+          fishSpecies: "Tuna, Mackerel, Swordfish",
+          bestTime: "Dawn 04:00-06:00",
+        },
+        {
+          name: "Rocky Cove",
+          location: "Marmaris • 15 km away",
+          successRate: 88,
+          fishSpecies: "Grouper, Snapper",
+          bestTime: "Evening 17:00-20:00",
+        },
+      ];
+
+      // Find spot function
+      function findSpot() {
+        const button =
+          event.currentTarget || document.querySelector(".main-button");
+        const originalText = button.innerHTML;
+        button.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Searching...';
+        button.disabled = true;
+
+        // Show loading
+        document.getElementById("loadingSection").style.display = "block";
+        document.getElementById("resultSection").style.display = "none";
+
+        setTimeout(() => {
+          // Hide loading
+          document.getElementById("loadingSection").style.display = "none";
+
+          // Select random spot
+          const randomIndex = Math.floor(Math.random() * fishingSpots.length);
+          const spot = fishingSpots[randomIndex];
+
+          // Update result display
+          document.getElementById("spotName").textContent = spot.name;
+          document.getElementById("spotLocation").textContent = spot.location;
+          document.getElementById("successRate").textContent =
+            spot.successRate + "%";
+          document.getElementById("fishSpecies").textContent = spot.fishSpecies;
+          document.getElementById("bestTime").textContent = spot.bestTime;
+
+          // Show result
+          document.getElementById("resultSection").style.display = "block";
+
+          // Reset button
+          button.innerHTML = originalText;
+          button.disabled = false;
+
+          // Save to localStorage
+          localStorage.setItem("lastFoundSpot", spot.name);
+          localStorage.setItem("spotSuccessRate", spot.successRate.toString());
+          localStorage.setItem("spotLocation", spot.location);
+
+          // Show success message
+          showMessage(
+            `Found: ${spot.name} (${spot.successRate}% success rate)`
+          );
+        }, 2000);
+      }
+
+      // View on map
+      function viewOnMap() {
+        const spotName = document.getElementById("spotName").textContent;
+        const location = document.getElementById("spotLocation").textContent;
+
+        // Store selected spot for map page
+        localStorage.setItem("selectedSpot", spotName);
+        localStorage.setItem("selectedLocation", location);
+
+        alert(
+          `Opening map with ${spotName} location...\n\nNavigating to map page.`
+        );
+        window.location.href = "map.html";
+      }
+
+      // Save to favorites
+      function saveToFavorites() {
+        const spotName = document.getElementById("spotName").textContent;
+        const successRate = document.getElementById("successRate").textContent;
+        const location = document.getElementById("spotLocation").textContent;
+
+        let favorites = JSON.parse(
+          localStorage.getItem("favoriteSpots") || "[]"
+        );
+
+        const spot = {
+          name: spotName,
+          successRate: successRate,
+          location: location,
+          savedAt: new Date().toISOString(),
+        };
+
+        const exists = favorites.some((fav) => fav.name === spot.name);
+
+        if (!exists) {
+          favorites.push(spot);
+          localStorage.setItem("favoriteSpots", JSON.stringify(favorites));
+          showMessage("✅ Spot saved to favorites!");
+        } else {
+          showMessage("⚠️ This spot is already in favorites.");
+        }
+      }
+
+      // Select spot from recent
+      function selectSpot(spotName) {
+        const spot =
+          fishingSpots.find((s) => s.name === spotName) || fishingSpots[0];
+
+        // Update result display
+        document.getElementById("spotName").textContent = spot.name;
+        document.getElementById("spotLocation").textContent = spot.location;
+        document.getElementById("successRate").textContent =
+          spot.successRate + "%";
+        document.getElementById("fishSpecies").textContent = spot.fishSpecies;
+        document.getElementById("bestTime").textContent = spot.bestTime;
+
+        // Show result section
+        document.getElementById("loadingSection").style.display = "none";
+        document.getElementById("resultSection").style.display = "block";
+
+        // Save to localStorage
+        localStorage.setItem("selectedSpot", spot.name);
+        localStorage.setItem("spotSuccessRate", spot.successRate.toString());
+
+        showMessage(
+          `Selected: ${spot.name} (${spot.successRate}% success rate)`
+        );
+      }
+
+      // Show message
+      function showMessage(message) {
+        alert(message);
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Load user's fishing type for better recommendations
+        const fisherType = localStorage.getItem("fisherType") || "hobbyist";
+        console.log(`Find Spot for: ${fisherType}`);
+
+        // Touch feedback
+        const buttons = document.querySelectorAll(
+          "button, .nav-item, .spot-item"
+        );
+        buttons.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        // Check if there's a previously selected spot
+        const lastSpot = localStorage.getItem("selectedSpot");
+        if (lastSpot) {
+          const spot = fishingSpots.find((s) => s.name === lastSpot);
+          if (spot) {
+            selectSpot(lastSpot);
+          }
+        }
+
+        console.log("Find Spot page loaded successfully");
+      });
+    </script>
+  </body>
+</html>

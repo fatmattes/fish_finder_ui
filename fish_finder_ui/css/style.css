@@ -1,0 +1,269 @@
+/* style.css - General styles for all pages */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f0f8ff;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  flex: 1;
+}
+
+/* Header */
+.app-header {
+  background-color: #1e6b52;
+  color: white;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.app-header p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-top: 0.3rem;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0.5rem 1rem;
+}
+
+.nav-tab {
+  flex: 1;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  font-weight: 600;
+  color: #5a7d7c;
+  text-decoration: none;
+  transition: all 0.3s;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-tab.active {
+  color: #1e6b52;
+  border-bottom: 3px solid #1e6b52;
+  background-color: rgba(30, 107, 82, 0.05);
+}
+
+.nav-tab i {
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+/* Content Container */
+.content-container {
+  padding: 1rem;
+  flex: 1;
+}
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form Section */
+.form-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form-section h3 {
+  color: #1e6b52;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #1e6b52;
+  box-shadow: 0 0 0 2px rgba(30, 107, 82, 0.2);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-control option {
+  padding: 0.5rem;
+}
+
+.photo-upload {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #777;
+}
+
+.photo-upload:hover {
+  border-color: #1e6b52;
+  background-color: rgba(30, 107, 82, 0.03);
+}
+
+.photo-upload i {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  color: #1e6b52;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.9rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn i {
+  margin-right: 8px;
+}
+
+.btn-login {
+  background-color: #1e6b52;
+  color: white;
+}
+
+.btn-login:hover {
+  background-color: #155941;
+  transform: translateY(-2px);
+}
+
+.btn-register {
+  background-color: #f0f8ff;
+  color: #1e6b52;
+  border: 2px solid #1e6b52;
+}
+
+.btn-register:hover {
+  background-color: #e1f1eb;
+  transform: translateY(-2px);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Footer Navigation */
+.footer-nav {
+  display: flex;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  padding: 0.8rem 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.footer-nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  color: #5a7d7c;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.footer-nav-item.active {
+  color: #1e6b52;
+}
+
+.footer-nav-item i {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .content-container {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .nav-tabs {
+    margin: 0.5rem 1.5rem;
+  }
+
+  .app-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .footer-nav-item {
+    font-size: 0.9rem;
+  }
+
+  .footer-nav-item i {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+}

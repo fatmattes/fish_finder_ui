@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .profile-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .header-title {
+        text-align: center;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .profile-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        padding-bottom: 20px;
+      }
+
+      .profile-info {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: white;
+        border: 3px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-name {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .user-email {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .user-type {
+        display: inline-block;
+        background: #e8f5e9;
+        color: #4caf50;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .stats-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 25px;
+      }
+
+      .stat-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .stat-card:active {
+        transform: scale(0.97);
+        border-color: #1a237e;
+      }
+
+      .stat-number {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .info-section {
+        background: #f8f9ff;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a237e;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-icon {
+        width: 32px;
+        height: 32px;
+        background: #e3f2fd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #1a237e;
+        font-size: 14px;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+
+      .info-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .info-label {
+        font-size: 11px;
+        color: #666;
+        margin-bottom: 3px;
+      }
+
+      .info-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        word-break: break-word;
+      }
+
+      /* GÜNCELLENMİŞ ACTION BUTONLARI - DAHA KÜÇÜK VE ŞIK */
+      .actions-section {
+        margin-bottom: 20px;
+      }
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        background: white;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%;
+        text-align: left;
+      }
+
+      .action-btn:hover {
+        border-color: #1a237e;
+        box-shadow: 0 3px 10px rgba(26, 35, 126, 0.1);
+      }
+
+      .action-btn:active {
+        transform: scale(0.98);
+        background: #f5f7ff;
+      }
+
+      .action-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .action-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+
+      .action-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .action-text h4 {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 3px;
+        font-weight: 600;
+      }
+
+      .action-text p {
+        font-size: 11px;
+        color: #666;
+        line-height: 1.3;
+      }
+
+      .action-arrow {
+        color: #999;
+        font-size: 12px;
+        margin-left: 8px;
+        flex-shrink: 0;
+      }
+
+      /* GÜNCELLENMİŞ LOGOUT BUTONU - DAHA ŞIK VE GÖZÜKEN */
+      .logout-container {
+        background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+        border: 1px solid #ffcdd2;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 10px;
+        text-align: center;
+      }
+
+      .logout-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #d32f2f;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .logout-btn {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+      }
+
+      .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(244, 67, 54, 0.3);
+      }
+
+      .logout-btn:active {
+        transform: translateY(0);
+        background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+          height: 85vh;
+        }
+
+        .profile-content {
+          padding: 15px;
+        }
+
+        .stats-section {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        .stat-card {
+          padding: 12px 8px;
+        }
+
+        .stat-number {
+          font-size: 18px;
+        }
+
+        .action-btn {
+          padding: 12px 14px;
+        }
+
+        .action-icon {
+          width: 32px;
+          height: 32px;
+          font-size: 14px;
+        }
+
+        .logout-btn {
+          padding: 12px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="header-title">
+          <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+          <p>Manage your account & preferences</p>
+        </div>
+      </div>
+
+      <!-- Profile Content -->
+      <div class="profile-content">
+        <!-- Profile Info -->
+        <div class="profile-info">
+          <div class="avatar" id="userAvatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="user-name" id="userName">Loading...</div>
+          <div class="user-email" id="userEmail">Loading...</div>
+          <div class="user-type" id="userType">Loading...</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-section">
+          <div class="stat-card" onclick="viewCatches()">
+            <div class="stat-number" id="totalCatches">0</div>
+            <div class="stat-label">Total Catches</div>
+          </div>
+          <div class="stat-card" onclick="viewFavorites()">
+            <div class="stat-number" id="savedSpots">0</div>
+            <div class="stat-label">Saved Spots</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="successRate">0%</div>
+            <div class="stat-label">Success Rate</div>
+          </div>
+        </div>
+
+        <!-- Personal Info -->
+        <div class="info-section">
+          <div class="section-title">
+            <i class="fas fa-id-card"></i>
+            Personal Information
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Email Address</div>
+              <div class="info-value" id="infoEmail">Loading...</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Primary Location</div>
+              <div class="info-value" id="infoLocation">Loading...</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon">
+              <i class="fas fa-award"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Experience Level</div>
+              <div class="info-value" id="infoExperience">Loading...</div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="info-content">
+              <div class="info-label">Member Since</div>
+              <div class="info-value" id="infoMemberSince">Loading...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-section">
+          <div class="section-title">
+            <i class="fas fa-sliders-h"></i>
+            Quick Actions
+          </div>
+
+          <button class="action-btn" onclick="editProfile()">
+            <div class="action-left">
+              <div
+                class="action-icon"
+                style="
+                  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+                "
+              >
+                <i class="fas fa-user-edit"></i>
+              </div>
+              <div class="action-text">
+                <h4>Edit Profile</h4>
+                <p>Update personal information</p>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right action-arrow"></i>
+          </button>
+
+          <button class="action-btn" onclick="viewFavorites()">
+            <div class="action-left">
+              <div
+                class="action-icon"
+                style="
+                  background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+                "
+              >
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="action-text">
+                <h4>Favorite Spots</h4>
+                <p>View & manage saved locations</p>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right action-arrow"></i>
+          </button>
+
+          <button
+            class="action-btn"
+            onclick="window.location.href='catch.html'"
+          >
+            <div class="action-left">
+              <div
+                class="action-icon"
+                style="
+                  background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+                "
+              >
+                <i class="fas fa-history"></i>
+              </div>
+              <div class="action-text">
+                <h4>Fishing History</h4>
+                <p>View your catch records</p>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right action-arrow"></i>
+          </button>
+
+          <button
+            class="action-btn"
+            onclick="window.location.href='notifications.html'"
+          >
+            <div class="action-left">
+              <div
+                class="action-icon"
+                style="
+                  background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+                "
+              >
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="action-text">
+                <h4>Notifications</h4>
+                <p>Manage alerts & reminders</p>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right action-arrow"></i>
+          </button>
+
+          <button
+            class="action-btn"
+            onclick="window.location.href='settings.html'"
+          >
+            <div class="action-left">
+              <div
+                class="action-icon"
+                style="
+                  background: linear-gradient(135deg, #607d8b 0%, #78909c 100%);
+                "
+              >
+                <i class="fas fa-cogs"></i>
+              </div>
+              <div class="action-text">
+                <h4>App Settings</h4>
+                <p>Customize app preferences</p>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right action-arrow"></i>
+          </button>
+        </div>
+
+        <!-- Logout Section - GÜNCELLENMİŞ -->
+        <div class="logout-container">
+          <div class="logout-title">
+            <i class="fas fa-sign-out-alt"></i>
+            Account Management
+          </div>
+          <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-power-off"></i>
+            Logout from FishFinder
+          </button>
+          <div style="margin-top: 12px; font-size: 11px; color: #999">
+            <i class="fas fa-info-circle"></i>
+            You'll need to login again to continue
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-tachometer-alt nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="profile.html" class="nav-item active">
+          <i class="fas fa-user nav-icon"></i>
+          Profile
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Load user data
+      function loadUserData() {
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const userEmail = localStorage.getItem("userEmail");
+        const userName = localStorage.getItem("userName");
+        const fisherType = localStorage.getItem("fisherType");
+
+        // Get catches from localStorage or create demo data
+        let catches = JSON.parse(localStorage.getItem("catches") || "[]");
+        if (catches.length === 0 && localStorage.getItem("isDemo") === "true") {
+          // Create demo catches for demo users
+          catches = [
+            {
+              fishType: "Sea Bass",
+              weight: "2.5",
+              location: "Barbaros Bay",
+              date: "2024-01-15",
+            },
+            {
+              fishType: "Bream",
+              weight: "1.8",
+              location: "Kumluk Beach",
+              date: "2024-01-10",
+            },
+            {
+              fishType: "Mackerel",
+              weight: "1.2",
+              location: "Deep Water",
+              date: "2024-01-05",
+            },
+          ];
+          localStorage.setItem("catches", JSON.stringify(catches));
+        }
+
+        const favoriteSpots = JSON.parse(
+          localStorage.getItem("favoriteSpots") || "[]"
+        );
+
+        // Profile info
+        document.getElementById("userName").textContent =
+          userName || userData.fullName || "User";
+        document.getElementById("userEmail").textContent =
+          userEmail || userData.email || "No email";
+        document.getElementById("infoEmail").textContent =
+          userEmail || userData.email || "-";
+        document.getElementById("infoLocation").textContent =
+          userData.location || "Marmaris, Turkey";
+
+        // User type
+        const fisherTypes = {
+          hobbyist: "Hobbyist Fisher",
+          professional: "Professional",
+          guide: "Fishing Guide",
+          advanced: "Advanced Fisher",
+        };
+        const userType =
+          fisherTypes[fisherType] ||
+          fisherTypes[userData.fisherType] ||
+          "Fisher";
+        document.getElementById("userType").textContent = userType;
+        document.getElementById("infoExperience").textContent = userType;
+
+        // Member since
+        if (userData.registrationDate) {
+          const date = new Date(userData.registrationDate);
+          const formattedDate = date.toLocaleDateString("en-US", {
+            month: "short",
+            year: "numeric",
+          });
+          document.getElementById("infoMemberSince").textContent =
+            formattedDate;
+        } else {
+          document.getElementById("infoMemberSince").textContent =
+            new Date().toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            });
+        }
+
+        // Stats
+        document.getElementById("totalCatches").textContent = catches.length;
+        document.getElementById("savedSpots").textContent =
+          favoriteSpots.length;
+
+        // Success rate - based on catches and favorite spots
+        const successRate = Math.min(
+          100,
+          catches.length * 10 + favoriteSpots.length * 5 + 30
+        );
+        document.getElementById("successRate").textContent = successRate + "%";
+
+        // Update avatar
+        updateAvatar(fisherType || userData.fisherType);
+      }
+
+      // Update avatar based on fisher type
+      function updateAvatar(fisherType) {
+        const avatar = document.getElementById("userAvatar");
+        const colors = {
+          hobbyist: ["#4caf50", "#8bc34a"],
+          professional: ["#2196f3", "#21cbf3"],
+          guide: ["#ff9800", "#ffb74d"],
+          advanced: ["#9c27b0", "#ba68c8"],
+        };
+        const color = colors[fisherType] || ["#1a237e", "#283593"];
+        avatar.style.background = `linear-gradient(135deg, ${color[0]} 0%, ${color[1]} 100%)`;
+
+        // Update avatar icon based on type
+        const icons = {
+          hobbyist: "fas fa-umbrella-beach",
+          professional: "fas fa-anchor",
+          guide: "fas fa-user-tie",
+          advanced: "fas fa-trophy",
+        };
+        const iconClass = icons[fisherType] || "fas fa-user";
+        avatar.innerHTML = `<i class="${iconClass}"></i>`;
+      }
+
+      // View catches
+      function viewCatches() {
+        window.location.href = "catch.html";
+      }
+
+      // Edit profile
+      function editProfile() {
+        const userName = document.getElementById("userName").textContent;
+        const userEmail = document.getElementById("userEmail").textContent;
+
+        const newName = prompt("Enter your new name:", userName);
+        if (newName && newName.trim() !== "") {
+          document.getElementById("userName").textContent = newName;
+          localStorage.setItem("userName", newName);
+
+          const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+          userData.fullName = newName;
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          alert("✅ Profile updated successfully!");
+        }
+      }
+
+      // View favorites
+      function viewFavorites() {
+        const favorites = JSON.parse(
+          localStorage.getItem("favoriteSpots") || "[]"
+        );
+        if (favorites.length === 0) {
+          alert(
+            "📌 No favorite spots saved yet.\n\nGo to 'Find Spot' to save some spots!"
+          );
+        } else {
+          let message = "⭐ FAVORITE FISHING SPOTS ⭐\n\n";
+          favorites.forEach((spot, index) => {
+            message += `${index + 1}. ${spot.name}\n`;
+            if (spot.successRate)
+              message += `   🎯 Success: ${spot.successRate}\n`;
+            if (spot.location) message += `   📍 ${spot.location}\n`;
+            if (spot.savedAt) {
+              const date = new Date(spot.savedAt).toLocaleDateString();
+              message += `   📅 Saved: ${date}\n`;
+            }
+            message += "\n";
+          });
+          alert(message);
+        }
+      }
+
+      // Logout
+      function logout() {
+        if (confirm("🚪 Are you sure you want to logout?")) {
+          localStorage.removeItem("userLoggedIn");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userName");
+          localStorage.removeItem("userRole");
+          localStorage.removeItem("isDemo");
+
+          alert("👋 Logged out successfully!");
+          window.location.href = "index.html";
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        loadUserData();
+
+        // Touch feedback
+        const actionBtns = document.querySelectorAll(
+          ".action-btn, .logout-btn"
+        );
+        actionBtns.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        const navItems = document.querySelectorAll(".nav-item");
+        navItems.forEach((item) => {
+          item.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          item.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        console.log("✅ Profile page loaded successfully");
+      });
+    </script>
+  </body>
+</html>

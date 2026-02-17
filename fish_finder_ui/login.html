@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .login-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 40px 20px 30px;
+        text-align: center;
+      }
+
+      .login-header h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .login-header p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .login-content {
+        flex: 1;
+        padding: 30px 25px;
+        overflow-y: auto;
+      }
+
+      .form-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #1a237e;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 15px;
+      }
+
+      .input-with-icon {
+        position: relative;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 16px 45px 16px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #1a237e;
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 18px;
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .remember {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .forgot-link {
+        color: #1a237e;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .login-button {
+        background: #1a237e;
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s;
+      }
+
+      .login-button:active {
+        transform: scale(0.98);
+        background: #283593;
+      }
+
+      .demo-button {
+        background: #f8f9ff;
+        color: #1a237e;
+        border: 2px solid #1a237e;
+        padding: 16px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+      }
+
+      .demo-button:active {
+        transform: scale(0.98);
+        background: #e8eaf6;
+      }
+
+      .divider {
+        text-align: center;
+        margin: 25px 0;
+        position: relative;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+      }
+
+      .divider::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #e0e0e0;
+      }
+
+      .register-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #666;
+        font-size: 15px;
+      }
+
+      .register-link a {
+        color: #1a237e;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .login-content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Login Header -->
+      <div class="login-header">
+        <h1><i class="fas fa-fish"></i> FishFinder</h1>
+        <p>Login to your account</p>
+      </div>
+
+      <!-- Login Content -->
+      <div class="login-content">
+        <div class="form-title">Welcome Back</div>
+
+        <!-- Demo Button -->
+        <button class="demo-button" onclick="enterDemoMode()">
+          <i class="fas fa-play"></i>
+          Try Demo Mode
+        </button>
+
+        <!-- Email Input -->
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <div class="input-with-icon">
+            <input
+              type="email"
+              class="form-input"
+              id="email"
+              placeholder="your.email@example.com"
+            />
+            <i class="fas fa-envelope input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-with-icon">
+            <input
+              type="password"
+              class="form-input"
+              id="password"
+              placeholder="Enter your password"
+            />
+            <i class="fas fa-lock input-icon"></i>
+          </div>
+        </div>
+
+        <!-- Remember & Forgot -->
+        <div class="remember-forgot">
+          <label class="remember">
+            <input type="checkbox" style="width: 16px; height: 16px" />
+            Remember me
+          </label>
+          <a href="#" class="forgot-link" onclick="forgotPassword()">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Login Button -->
+        <button class="login-button" onclick="handleLogin()">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">Don't have an account?</div>
+
+        <!-- Register Link -->
+        <div class="register-link">
+          <a href="register.html">Create new account</a>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-tachometer-alt nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i class="fas fa-user nav-icon"></i>
+          Profile
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Demo Mode
+      function enterDemoMode() {
+        const button = event.currentTarget;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        button.disabled = true;
+
+        setTimeout(() => {
+          // Store login status
+          localStorage.setItem("userLoggedIn", "true");
+          localStorage.setItem("isDemo", "true");
+          localStorage.setItem("userEmail", "demo@fishfinder.com");
+          localStorage.setItem("userName", "Demo User");
+          localStorage.setItem("userRole", "demo");
+
+          // Store demo user data
+          const demoData = {
+            fullName: "Demo User",
+            email: "demo@fishfinder.com",
+            role: "demo",
+            joined: new Date().toISOString(),
+            preferences: {
+              fishingType: "all",
+              notifications: true,
+              theme: "default",
+            },
+          };
+          localStorage.setItem("userData", JSON.stringify(demoData));
+
+          button.innerHTML = originalText;
+          button.disabled = false;
+
+          alert("Demo mode activated! Redirecting to dashboard...");
+          window.location.href = "home.html";
+        }, 800);
+      }
+
+      // Login Function
+      function handleLogin() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // Basic validation
+        if (!email || !password) {
+          alert("Please enter email and password");
+          return;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+          alert("Please enter a valid email address");
+          return;
+        }
+
+        const button = document.querySelector(".login-button");
+        const originalText = button.innerHTML;
+        button.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        button.disabled = true;
+
+        setTimeout(() => {
+          // Store login status
+          localStorage.setItem("userLoggedIn", "true");
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("userName", email.split("@")[0]);
+          localStorage.setItem("userRole", "user");
+
+          // Store user data
+          const userData = {
+            fullName: email.split("@")[0],
+            email: email,
+            role: "user",
+            joined: new Date().toISOString(),
+            preferences: {
+              fishingType: "sea",
+              notifications: true,
+              theme: "default",
+            },
+          };
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          button.innerHTML = originalText;
+          button.disabled = false;
+
+          alert("Login successful! Welcome to FishFinder.");
+          window.location.href = "home.html";
+        }, 1200);
+      }
+
+      // Forgot Password
+      function forgotPassword() {
+        const email = prompt("Enter your email to reset password:");
+        if (email && email.includes("@")) {
+          alert(
+            "Password reset link has been sent to " +
+              email +
+              "\n\nCheck your email inbox."
+          );
+        }
+      }
+
+      // Enter key support
+      document.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          handleLogin();
+        }
+      });
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if already logged in
+        if (localStorage.getItem("userLoggedIn") === "true") {
+          window.location.href = "home.html";
+        }
+
+        // Touch feedback
+        const buttons = document.querySelectorAll("button, .nav-item");
+        buttons.forEach((btn) => {
+          btn.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          btn.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        // Clear any previous demo/guest data
+        localStorage.removeItem("touristMode");
+        localStorage.removeItem("isTourist");
+        localStorage.removeItem("isGuest");
+        localStorage.removeItem("guestLogin");
+
+        console.log("Login page loaded successfully");
+      });
+    </script>
+  </body>
+</html>

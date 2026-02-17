@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications - FishFinder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .mobile-container {
+        width: 100%;
+        max-width: 400px;
+        height: 90vh;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-bar {
+        background: #1a237e;
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .notifications-header {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-size: 20px;
+        text-decoration: none;
+        z-index: 10;
+      }
+
+      .header-title {
+        text-align: center;
+      }
+
+      .header-title h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .header-title p {
+        opacity: 0.9;
+        font-size: 14px;
+      }
+
+      .notifications-count {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #ff4757;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .notifications-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        padding-bottom: 20px;
+      }
+
+      .notification-item {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 15px;
+        display: flex;
+        gap: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .notification-item.unread {
+        border-left: 4px solid #1a237e;
+        background: #f8f9ff;
+      }
+
+      .notification-item.important {
+        border-left: 4px solid #ff4757;
+        background: #fff5f5;
+      }
+
+      .notification-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .icon-weather {
+        background: #e3f2fd;
+        color: #2196f3;
+      }
+
+      .icon-fish {
+        background: #e8f5e9;
+        color: #4caf50;
+      }
+
+      .icon-safety {
+        background: #fff3e0;
+        color: #ff9800;
+      }
+
+      .icon-system {
+        background: #f5f5f5;
+        color: #666;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .notification-message {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.4;
+        margin-bottom: 8px;
+      }
+
+      .notification-time {
+        font-size: 12px;
+        color: #999;
+      }
+
+      .notification-badge {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #1a237e;
+        flex-shrink: 0;
+        margin-top: 6px;
+      }
+
+      .mark-all-read {
+        background: #1a237e;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s;
+      }
+
+      .mark-all-read:active {
+        transform: scale(0.98);
+        background: #283593;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+        display: none;
+      }
+
+      .empty-state i {
+        font-size: 50px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .empty-state p {
+        font-size: 14px;
+        color: #999;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        padding: 10px 0;
+        z-index: 1000;
+      }
+
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        padding: 8px 5px;
+        color: #666;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .nav-item.active {
+        color: #1a237e;
+        font-weight: 600;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      @media (max-width: 400px) {
+        .mobile-container {
+          border-radius: 20px;
+        }
+
+        .notifications-content {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div id="currentTime">09:41</div>
+        <div>
+          <i class="fas fa-signal"></i>
+          <i class="fas fa-wifi" style="margin: 0 10px"></i>
+          <i class="fas fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+
+      <!-- Notifications Header -->
+      <div class="notifications-header">
+        <div class="header-title">
+          <h1><i class="fas fa-bell"></i> Notifications</h1>
+          <p>Your latest alerts</p>
+        </div>
+        <div class="notifications-count" id="notificationCount">3</div>
+      </div>
+
+      <!-- Notifications Content -->
+      <div class="notifications-content">
+        <!-- Weather Alert -->
+        <div
+          class="notification-item unread important"
+          onclick="viewNotification(this, 'weather')"
+        >
+          <div class="notification-icon icon-weather">
+            <i class="fas fa-cloud-rain"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">
+              <span>Weather Alert</span>
+              <div class="notification-badge"></div>
+            </div>
+            <div class="notification-message">
+              Rain expected in 2 hours. Consider returning to shore.
+            </div>
+            <div class="notification-time">10 min ago</div>
+          </div>
+        </div>
+
+        <!-- Fishing Spot Alert -->
+        <div
+          class="notification-item unread"
+          onclick="viewNotification(this, 'fishing')"
+        >
+          <div class="notification-icon icon-fish">
+            <i class="fas fa-fish"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">
+              <span>Good Fishing Conditions</span>
+              <div class="notification-badge"></div>
+            </div>
+            <div class="notification-message">
+              Water temperature optimal for sea bass at your location.
+            </div>
+            <div class="notification-time">1 hour ago</div>
+          </div>
+        </div>
+
+        <!-- Safety Alert -->
+        <div
+          class="notification-item unread"
+          onclick="viewNotification(this, 'safety')"
+        >
+          <div class="notification-icon icon-safety">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">
+              <span>Safety Check</span>
+              <div class="notification-badge"></div>
+            </div>
+            <div class="notification-message">
+              Check your life jacket and emergency equipment.
+            </div>
+            <div class="notification-time">2 hours ago</div>
+          </div>
+        </div>
+
+        <!-- System Notification -->
+        <div
+          class="notification-item"
+          onclick="viewNotification(this, 'system')"
+        >
+          <div class="notification-icon icon-system">
+            <i class="fas fa-cog"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">
+              <span>App Update</span>
+            </div>
+            <div class="notification-message">
+              New fishing spots added to your area.
+            </div>
+            <div class="notification-time">Yesterday</div>
+          </div>
+        </div>
+
+        <!-- Welcome Notification -->
+        <div
+          class="notification-item"
+          onclick="viewNotification(this, 'welcome')"
+        >
+          <div class="notification-icon icon-fish">
+            <i class="fas fa-anchor"></i>
+          </div>
+          <div class="notification-content">
+            <div class="notification-title">
+              <span>Welcome to FishFinder</span>
+            </div>
+            <div class="notification-message">
+              Start exploring fishing spots near you!
+            </div>
+            <div class="notification-time">2 days ago</div>
+          </div>
+        </div>
+
+        <!-- Mark All Read Button -->
+        <button class="mark-all-read" onclick="markAllAsRead()">
+          <i class="fas fa-check-double"></i>
+          Mark All as Read
+        </button>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+          <i class="far fa-bell-slash"></i>
+          <h3>No Notifications</h3>
+          <p>You're all caught up!</p>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+          <i class="fas fa-home nav-icon"></i>
+          Home
+        </a>
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-tachometer-alt nav-icon"></i>
+          Dashboard
+        </a>
+        <a href="find-spot.html" class="nav-item">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          Find Spot
+        </a>
+        <a href="notifications.html" class="nav-item active">
+          <i class="fas fa-bell nav-icon"></i>
+          Alerts
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Update time
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        document.getElementById("currentTime").textContent = timeString;
+      }
+
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // View notification
+      function viewNotification(element, type) {
+        const title = element.querySelector(
+          ".notification-title span"
+        ).textContent;
+        const message = element.querySelector(
+          ".notification-message"
+        ).textContent;
+        const time = element.querySelector(".notification-time").textContent;
+
+        // Show notification details
+        alert(`🔔 ${title}\n\n${message}\n\n📅 ${time}`);
+
+        // Mark as read if unread
+        if (element.classList.contains("unread")) {
+          markAsRead(element);
+        }
+
+        // Store that user viewed this notification
+        const notificationKey = `notification_${type}_viewed`;
+        localStorage.setItem(notificationKey, "true");
+      }
+
+      // Mark single notification as read
+      function markAsRead(element) {
+        element.classList.remove("unread");
+        const badge = element.querySelector(".notification-badge");
+        if (badge) badge.style.display = "none";
+        updateNotificationCount(-1);
+      }
+
+      // Mark all notifications as read
+      function markAllAsRead() {
+        const unreadNotifications = document.querySelectorAll(
+          ".notification-item.unread"
+        );
+        if (unreadNotifications.length === 0) {
+          alert("All notifications are already read!");
+          return;
+        }
+
+        if (confirm("Mark all notifications as read?")) {
+          unreadNotifications.forEach((notification) => {
+            notification.classList.remove("unread");
+            const badge = notification.querySelector(".notification-badge");
+            if (badge) badge.style.display = "none";
+          });
+
+          updateNotificationCount(-unreadNotifications.length);
+          alert(`Marked ${unreadNotifications.length} notifications as read!`);
+        }
+      }
+
+      // Update notification count
+      function updateNotificationCount(change) {
+        const countElement = document.getElementById("notificationCount");
+        let currentCount = parseInt(countElement.textContent);
+        currentCount = Math.max(0, currentCount + change);
+        countElement.textContent = currentCount;
+
+        if (currentCount === 0) {
+          countElement.style.display = "none";
+          document.getElementById("emptyState").style.display = "block";
+          document.querySelector(".mark-all-read").style.display = "none";
+        } else {
+          countElement.style.display = "flex";
+          document.getElementById("emptyState").style.display = "none";
+          document.querySelector(".mark-all-read").style.display = "flex";
+        }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check login
+        if (localStorage.getItem("userLoggedIn") !== "true") {
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Load user notification preferences
+        const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+        const userName =
+          localStorage.getItem("userName") || userData.fullName || "User";
+
+        // Update welcome notification with user's name
+        const welcomeMsg = document.querySelector(
+          ".notification-item:last-child .notification-message"
+        );
+        if (
+          welcomeMsg &&
+          !localStorage.getItem("welcome_notification_viewed")
+        ) {
+          welcomeMsg.textContent = `Welcome ${userName}! Start exploring fishing spots near you!`;
+        }
+
+        // Touch feedback
+        const notifications = document.querySelectorAll(
+          ".notification-item, .mark-all-read"
+        );
+        notifications.forEach((item) => {
+          item.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          item.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        const navItems = document.querySelectorAll(".nav-item");
+        navItems.forEach((item) => {
+          item.addEventListener("touchstart", function () {
+            this.style.opacity = "0.7";
+          });
+          item.addEventListener("touchend", function () {
+            this.style.opacity = "1";
+          });
+        });
+
+        // Check if all notifications are read
+        updateNotificationCount(0); // This will update the display
+
+        console.log("Notifications page loaded successfully");
+      });
+    </script>
+  </body>
+</html>
